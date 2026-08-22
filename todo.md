@@ -30,3 +30,6 @@
 - [x] Refine hero and panel typography so text maintains clear, uncluttered boundaries across desktop and mobile views.
 - [x] Verify visual motion, reduced-motion behavior, and panel/chat interactions after the depth enhancement.
 - [x] Re-run reduced-motion browser validation after the depth enhancement and confirm particles, 3D transforms, and hero fallback resolve safely.
+- [x] Tighten the colored signal particles into a compact orbit that follows the hover point closely.
+- [x] Make the orbit continuously revolve and visually fuse into a bright unified atomic point on click and pathway selection.
+- [x] Revalidate normal-motion and reduced-motion particle behavior after the atomic-orbit refinement.

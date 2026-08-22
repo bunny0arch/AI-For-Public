@@ -20,25 +20,27 @@ const languageOptions = ["English", "हिन्दी", "తెలుగు"] 
 type ConversationLanguage = (typeof languageOptions)[number];
 const AIChatBox = lazy(() => import("@/components/AIChatBox").then((module) => ({ default: module.AIChatBox })));
 const signalOrbs = [
-  [-44, -27, "#c4f25a", 1.0], [-23, 34, "#ac86ff", 0.72], [36, -30, "#ffd279", 0.82],
-  [52, 16, "#78d9ff", 0.64], [12, 46, "#ff9ecf", 0.78], [-57, 18, "#e4ff93", 0.56],
-  [18, -53, "#e7b5ff", 0.68], [-10, -12, "#ffe6a6", 0.42], [63, -7, "#a6f4cb", 0.5],
+  [18, "#c4f25a", 1.0, 8, 3.1], [25, "#ac86ff", 0.74, 66, 4.2], [21, "#ffd279", 0.82, 126, 3.6],
+  [30, "#78d9ff", 0.64, 182, 4.7], [16, "#ff9ecf", 0.78, 232, 2.9], [27, "#e4ff93", 0.56, 284, 4.4],
+  [23, "#e7b5ff", 0.68, 326, 3.8], [11, "#ffe6a6", 0.48, 42, 2.6], [34, "#a6f4cb", 0.52, 151, 5.1],
 ] as const;
 
 function SignalParticles({ visible, merged }: { visible: boolean; merged: boolean }) {
   return (
     <div className={`signal-particle-field ${visible ? "is-visible" : ""} ${merged ? "is-merged" : ""}`} aria-hidden="true">
       <span className="signal-core" />
-      {signalOrbs.map(([x, y, color, scale], index) => (
+      {signalOrbs.map(([radius, color, scale, angle, duration], index) => (
         <span
           className="signal-orb"
-          key={`${x}-${y}`}
+          key={`${radius}-${angle}`}
           style={{
-            "--orb-x": x,
-            "--orb-y": y,
+            "--orb-radius": `${radius}px`,
             "--orb-color": color,
             "--orb-scale": scale,
-            "--orb-delay": `${index * -0.37}s`,
+            "--start-rotation": `${angle}deg`,
+            "--end-rotation": `${angle + 360}deg`,
+            "--orb-duration": `${duration}s`,
+            "--orb-delay": `${index * -0.31}s`,
           } as CSSProperties}
         >
           <span className="signal-orb-core" />
