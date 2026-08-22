@@ -1,0 +1,26 @@
+# Delivery Checklist
+
+- [x] Review GetLayers for animation timing, compositional patterns, and interaction treatments that suit an editorial landing page.
+- [x] Review MotionSites for complementary landing-page motion, compositional rhythm, and responsive interaction ideas.
+- [x] Distill only relevant interaction principles into the existing Tidal Signal design direction.
+- [x] Implement the hero, signal index, focused chat dock, and responsive mobile composition.
+- [x] Apply resource-loading and motion-reduction measures so the video-led page remains lightweight and accessible.
+- [x] Inspect desktop and mobile renders, refine visual issues, and confirm build health.
+- [x] Implement and verify the landing page UI, including the hero, nine-panel signal index, focused chat dock, and responsive mobile layout.
+- [x] Verify in code and runtime the video metadata preload, poster/fallback, lazy-loaded images, and reduced-motion behavior.
+- [x] Define strict domain boundaries for every pathway assistant, including designated cross-pathway redirects and a ninth-panel fallback for unclassified needs.
+- [x] Implement deterministic routing safeguards around the model prompt so irrelevant questions cannot drift into an unrelated assistant scope.
+- [x] Repair failed image generation placeholders and rework the signal index away from a conventional card-grid appearance.
+- [x] Test correct-scope, cross-scope, and unclassified chat requests through the conversation dock.
+- [x] Inspect available connected services and selectively use only those that improve scoped assistance, resilience, or observability without adding unnecessary client latency.
+- [x] Wire every visible control to a meaningful action or a transparent in-product explanation, including language, path entry, and overlay controls.
+- [x] Add short fade, zoom-fade, and menu pop-in/pop-out transitions that respect reduced-motion preferences.
+- [x] Verify there are no unresolved client/server errors and validate all interactive routes under desktop and mobile conditions.
+- [x] Investigate the recurring historical dotenv startup log, restart the development service, and confirm clean current runtime health.
+- [x] Exercise a core conversation and routing flow from a mobile viewport, beyond static visual verification.
+- [x] Reduce the initial landing-page JavaScript cost by loading the rich chat renderer only when a user opens a pathway.
+- [x] Reduce the initial landing-page JavaScript cost by loading the rich chat renderer only when a user opens a pathway.
+- [x] Capture explicit code and runtime evidence for video preload/poster, lazy media loading, and reduced-motion fallback behavior.
+- [x] Complete an end-to-end compact-viewport conversation submission and verify its scoped response or routing outcome.
+- [x] Tighten farmer-assistant safety wording so text-only crop observations are never framed as a disease diagnosis or probable diagnosis.
+- [x] Exercise and record browser runtime behavior with reduced motion and the hero-video fallback active.
