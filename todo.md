@@ -24,3 +24,9 @@
 - [x] Complete an end-to-end compact-viewport conversation submission and verify its scoped response or routing outcome.
 - [x] Tighten farmer-assistant safety wording so text-only crop observations are never framed as a disease diagnosis or probable diagnosis.
 - [x] Exercise and record browser runtime behavior with reduced motion and the hero-video fallback active.
+- [x] Preserve and explicitly label all nine independently scoped community pathways in the revised panel system.
+- [x] Add scroll-responsive layered depth and controlled overlap to the pathway signal index without compromising reading order or mobile usability.
+- [x] Add a high-performance cursor-reactive signal field whose particles converge on pathway selection and release on conversation exit.
+- [x] Refine hero and panel typography so text maintains clear, uncluttered boundaries across desktop and mobile views.
+- [x] Verify visual motion, reduced-motion behavior, and panel/chat interactions after the depth enhancement.
+- [x] Re-run reduced-motion browser validation after the depth enhancement and confirm particles, 3D transforms, and hero fallback resolve safely.

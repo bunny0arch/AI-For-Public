@@ -11,7 +11,7 @@ import {
   SendHorizonal,
   X,
 } from "lucide-react";
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { toast } from "sonner";
 
 const markUrl = "/manus-storage/collective-mark_962f936b.png";
@@ -19,6 +19,34 @@ const heroVideoUrl = "/manus-storage/purple-desert_18154f41.mp4";
 const languageOptions = ["English", "हिन्दी", "తెలుగు"] as const;
 type ConversationLanguage = (typeof languageOptions)[number];
 const AIChatBox = lazy(() => import("@/components/AIChatBox").then((module) => ({ default: module.AIChatBox })));
+const signalOrbs = [
+  [-44, -27, "#c4f25a", 1.0], [-23, 34, "#ac86ff", 0.72], [36, -30, "#ffd279", 0.82],
+  [52, 16, "#78d9ff", 0.64], [12, 46, "#ff9ecf", 0.78], [-57, 18, "#e4ff93", 0.56],
+  [18, -53, "#e7b5ff", 0.68], [-10, -12, "#ffe6a6", 0.42], [63, -7, "#a6f4cb", 0.5],
+] as const;
+
+function SignalParticles({ visible, merged }: { visible: boolean; merged: boolean }) {
+  return (
+    <div className={`signal-particle-field ${visible ? "is-visible" : ""} ${merged ? "is-merged" : ""}`} aria-hidden="true">
+      <span className="signal-core" />
+      {signalOrbs.map(([x, y, color, scale], index) => (
+        <span
+          className="signal-orb"
+          key={`${x}-${y}`}
+          style={{
+            "--orb-x": x,
+            "--orb-y": y,
+            "--orb-color": color,
+            "--orb-scale": scale,
+            "--orb-delay": `${index * -0.37}s`,
+          } as CSSProperties}
+        >
+          <span className="signal-orb-core" />
+        </span>
+      ))}
+    </div>
+  );
+}
 
 function focusPathways() {
   document.getElementById("pathways")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -29,6 +57,10 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [language, setLanguage] = useState<ConversationLanguage>("English");
   const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
+  const [signalVisible, setSignalVisible] = useState(false);
+  const [signalPulse, setSignalPulse] = useState(false);
+  const siteRef = useRef<HTMLElement>(null);
+  const signalPulseTimer = useRef<number | null>(null);
   const dialogRef = useRef<HTMLElement>(null);
 
   const chatMutation = trpc.chat.respond.useMutation({
@@ -69,8 +101,49 @@ export default function Home() {
     }
   }, [selectedPathway]);
 
+  useEffect(() => {
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (!finePointer.matches || reducedMotion.matches) return;
+
+    let frame = 0;
+    let pointerX = 0;
+    let pointerY = 0;
+    const updatePointer = () => {
+      siteRef.current?.style.setProperty("--signal-x", `${pointerX}px`);
+      siteRef.current?.style.setProperty("--signal-y", `${pointerY}px`);
+      frame = 0;
+    };
+    const onMove = (event: PointerEvent) => {
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+      setSignalVisible(true);
+      if (!frame) frame = window.requestAnimationFrame(updatePointer);
+    };
+    const onLeave = () => setSignalVisible(false);
+
+    window.addEventListener("pointermove", onMove, { passive: true });
+    document.documentElement.addEventListener("mouseleave", onLeave);
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      document.documentElement.removeEventListener("mouseleave", onLeave);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  useEffect(() => () => {
+    if (signalPulseTimer.current) window.clearTimeout(signalPulseTimer.current);
+  }, []);
+
+  function pulseSignal() {
+    setSignalPulse(true);
+    if (signalPulseTimer.current) window.clearTimeout(signalPulseTimer.current);
+    signalPulseTimer.current = window.setTimeout(() => setSignalPulse(false), 620);
+  }
+
   function openPathway(pathway: CommunityPathway) {
     chatMutation.reset();
+    pulseSignal();
     setSelectedPathway(pathway);
     setMessages([{ role: "assistant", content: pathway.greeting }]);
   }
@@ -78,6 +151,7 @@ export default function Home() {
   function closePathway() {
     if (!chatMutation.isPending) {
       setSelectedPathway(null);
+      setSignalPulse(false);
     }
   }
 
@@ -103,7 +177,12 @@ export default function Home() {
   }
 
   return (
-    <main className="site-shell">
+    <main
+      className={`site-shell ${selectedPathway || signalPulse ? "signal-is-merged" : ""}`}
+      ref={siteRef}
+      onPointerDown={() => { if (!selectedPathway) pulseSignal(); }}
+    >
+      <SignalParticles visible={signalVisible} merged={Boolean(selectedPathway) || signalPulse} />
       <section className="hero-shell" aria-labelledby="hero-title">
         <video
           className="hero-video"
@@ -205,8 +284,13 @@ export default function Home() {
         </div>
 
         <div className="community-grid" role="list" aria-label="Community AI pathways">
-          {communityPathways.map((pathway) => (
-            <article className={`pathway-panel panel-${pathway.size}`} key={pathway.id} role="listitem">
+          {communityPathways.map((pathway, index) => (
+            <article
+              className={`pathway-panel panel-${pathway.size}`}
+              key={pathway.id}
+              role="listitem"
+              style={{ "--panel-index": index } as CSSProperties}
+            >
               {pathway.image && (
                 <img src={pathway.image} alt="" loading="lazy" className="panel-image" />
               )}
@@ -219,7 +303,7 @@ export default function Home() {
                 </div>
                 <div className="panel-body">
                   <h3>{pathway.title}</h3>
-                  <p>{pathway.summary}</p>
+                  <p><span className="panel-purpose">{pathway.scope}</span>{pathway.summary}</p>
                 </div>
                 <div className="panel-footer">
                   <span>Open conversation</span>
