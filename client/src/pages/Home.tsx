@@ -10,9 +10,12 @@ import {
   Download,
   Languages,
   MoveDown,
+  Pin,
+  PinOff,
   Play,
   SendHorizonal,
   Square,
+  Undo2,
   X,
 } from "lucide-react";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
@@ -24,6 +27,12 @@ const heroVideoUrl = `${publicMediaBase}glass-flower.mp4`;
 const fieldReferenceUrl = `${publicMediaBase}field-reference.jpg`;
 const AIChatBox = lazy(() => import("@/components/AIChatBox").then((module) => ({ default: module.AIChatBox })));
 const REDIRECT_HANDOFF_MS = 250;
+
+type RedirectOrigin = {
+  pathway: CommunityPathway;
+  messages: Message[];
+  carriedQuestion: string | null;
+};
 
 function CursorSphere({ visible, popping }: { visible: boolean; popping: boolean }) {
   return <span className={`cursor-sphere ${visible ? "is-visible" : ""} ${popping ? "is-popping" : ""}`} aria-hidden="true" />;
@@ -102,6 +111,14 @@ function summarizeHandoffContext(source: CommunityPathway, conversation: Message
   return `The visitor was previously speaking with ${source.guide.name} in ${source.title}. Relevant request: ${recentUserTopics.join(" / ")}`;
 }
 
+function triggerHandoffHaptic() {
+  if (typeof window === "undefined") return;
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+  const vibrate = (navigator as Navigator & { vibrate?: (pattern: number | number[]) => boolean }).vibrate;
+  if (!reducedMotion && coarsePointer) vibrate?.(12);
+}
+
 export default function Home() {
   const [selectedPathway, setSelectedPathway] = useState<CommunityPathway | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -114,6 +131,9 @@ export default function Home() {
   const [isGuideRedirecting, setIsGuideRedirecting] = useState(false);
   const [redirectDestination, setRedirectDestination] = useState<CommunityPathway | null>(null);
   const [handoffContext, setHandoffContext] = useState<string | null>(null);
+  const [redirectOrigin, setRedirectOrigin] = useState<RedirectOrigin | null>(null);
+  const [carriedQuestion, setCarriedQuestion] = useState<string | null>(null);
+  const [isCarriedQuestionPinned, setIsCarriedQuestionPinned] = useState(false);
   const [chatError, setChatError] = useState<string | null>(null);
   const siteRef = useRef<HTMLElement>(null);
   const dialogRef = useRef<HTMLElement>(null);
@@ -249,6 +269,9 @@ export default function Home() {
     setChatError(null);
     setRedirectDestination(null);
     setHandoffContext(null);
+    setRedirectOrigin(null);
+    setCarriedQuestion(null);
+    setIsCarriedQuestionPinned(false);
     setSelectedPathway(pathway);
     setMessages([{ role: "assistant", content: pathway.greeting }]);
   }
@@ -263,6 +286,9 @@ export default function Home() {
         setIsConversationClosing(false);
         setRedirectDestination(null);
         setHandoffContext(null);
+        setRedirectOrigin(null);
+        setCarriedQuestion(null);
+        setIsCarriedQuestionPinned(false);
       }, 260);
     }
   }
@@ -270,15 +296,21 @@ export default function Home() {
   function beginRedirectHandoff(destination: CommunityPathway, redirectMessage: string) {
     if (isGuideRedirecting) return;
 
-    const context = selectedPathway ? summarizeHandoffContext(selectedPathway, messages) : null;
-    const carriedQuestion = [...messages].reverse().find((message) => message.role === "user")?.content;
+    const origin = selectedPathway;
+    const context = origin ? summarizeHandoffContext(origin, messages) : null;
+    const nextCarriedQuestion = [...messages].reverse().find((message) => message.role === "user")?.content ?? null;
+    if (!origin) return;
     guideAudioRef.current?.pause();
     setIsGuideSpeaking(false);
     setLanguageMenuOpen(false);
     setChatError(null);
     setRedirectDestination(destination);
     setHandoffContext(context);
+    setRedirectOrigin({ pathway: origin, messages, carriedQuestion: nextCarriedQuestion });
+    setCarriedQuestion(nextCarriedQuestion);
+    setIsCarriedQuestionPinned(false);
     setIsGuideRedirecting(true);
+    triggerHandoffHaptic();
 
     if (redirectTimerRef.current) window.clearTimeout(redirectTimerRef.current);
     redirectTimerRef.current = window.setTimeout(() => {
@@ -286,10 +318,37 @@ export default function Home() {
       window.requestAnimationFrame(() => {
         setSelectedPathway(destination);
         setMessages([
-          ...(carriedQuestion ? [{ role: "user" as const, content: carriedQuestion }] : []),
+          ...(nextCarriedQuestion ? [{ role: "user" as const, content: nextCarriedQuestion }] : []),
           { role: "assistant", content: redirectMessage },
           { role: "assistant", content: destination.greeting },
         ]);
+        setIsGuideRedirecting(false);
+        redirectTimerRef.current = null;
+      });
+    }, REDIRECT_HANDOFF_MS);
+  }
+
+  function returnToPreviousGuide() {
+    if (!redirectOrigin || isGuideRedirecting) return;
+
+    guideAudioRef.current?.pause();
+    setIsGuideSpeaking(false);
+    setLanguageMenuOpen(false);
+    setChatError(null);
+    setRedirectDestination(redirectOrigin.pathway);
+    setHandoffContext(`Returning to ${redirectOrigin.pathway.guide.name}.`);
+    setIsGuideRedirecting(true);
+    triggerHandoffHaptic();
+
+    if (redirectTimerRef.current) window.clearTimeout(redirectTimerRef.current);
+    redirectTimerRef.current = window.setTimeout(() => {
+      setSelectedPathway(null);
+      window.requestAnimationFrame(() => {
+        setSelectedPathway(redirectOrigin.pathway);
+        setMessages(redirectOrigin.messages);
+        setRedirectOrigin(null);
+        setCarriedQuestion(null);
+        setIsCarriedQuestionPinned(false);
         setIsGuideRedirecting(false);
         redirectTimerRef.current = null;
       });
@@ -616,11 +675,30 @@ export default function Home() {
                 </button>
               </div>
             </div>
+            {redirectOrigin && (
+              <button className="dock-return" type="button" onClick={returnToPreviousGuide} disabled={chatMutation.isPending || isGuideRedirecting}>
+                <Undo2 size={14} strokeWidth={1.7} />
+                <span>Back to {redirectOrigin.pathway.guide.name}</span>
+              </button>
+            )}
             <audio ref={guideAudioRef} preload="auto" aria-hidden="true" />
             <div className="dock-note">
               <CircleHelp size={16} strokeWidth={1.5} />
               <span>For grounded, local decisions. Verify time-sensitive or urgent guidance with trusted sources.</span>
             </div>
+            {carriedQuestion && (
+              <aside className={`carried-question ${isCarriedQuestionPinned ? "is-pinned" : ""}`} aria-label="Carried question">
+                <div>
+                  <Pin size={14} strokeWidth={1.6} />
+                  <span>{isCarriedQuestionPinned ? "Pinned original question" : "Carried question"}</span>
+                </div>
+                <p>{carriedQuestion}</p>
+                <button type="button" onClick={() => setIsCarriedQuestionPinned((pinned) => !pinned)} aria-pressed={isCarriedQuestionPinned}>
+                  {isCarriedQuestionPinned ? <PinOff size={13} strokeWidth={1.6} /> : <Pin size={13} strokeWidth={1.6} />}
+                  <span>{isCarriedQuestionPinned ? "Unpin" : "Pin"}</span>
+                </button>
+              </aside>
+            )}
             <Suspense fallback={<div className="chat-loading" role="status">Opening your conversation…</div>}>
               <AIChatBox
                 messages={messages}

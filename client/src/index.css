@@ -259,8 +259,17 @@ button:focus-visible, a:focus-visible { outline: 2px solid #c4f25a; outline-offs
 .dock-close:hover { background: #c4f25a; color: #1d131f; transform: rotate(6deg); }
 .dock-download { display: inline-flex; align-items: center; gap: 0.42rem; height: 2.3rem; padding: 0 0.72rem; color: #c4f25a; background: transparent; border: 1px solid rgba(196, 242, 90, 0.46); font: 700 0.55rem/1 "Manrope", sans-serif; letter-spacing: 0.08em; text-transform: uppercase; transition: color 160ms var(--ease-out, ease), background 160ms var(--ease-out, ease), transform 160ms var(--ease-out, ease); }
 .dock-download:hover { color: #1d131f; background: #c4f25a; transform: translateY(-1px); }
+.dock-return { display: inline-flex; align-items: center; gap: 0.42rem; width: fit-content; margin-top: 0.78rem; padding: 0.42rem 0.55rem; color: var(--signal-gold-light, #e0c98e); background: rgba(207, 176, 106, 0.1); border: 1px solid rgba(207, 176, 106, 0.44); font: 700 0.5rem/1 "Manrope", sans-serif; letter-spacing: 0.07em; text-transform: uppercase; transition: color 160ms var(--ease-out, ease), background 160ms var(--ease-out, ease), transform 160ms var(--ease-out, ease); }
+.dock-return:hover:not(:disabled) { color: #1d131f; background: var(--signal-gold, #cfb06a); transform: translateX(-2px); }
+.dock-return:disabled { cursor: wait; opacity: 0.55; }
 .dock-note { display: flex; align-items: flex-start; gap: 0.55rem; margin: 1rem 0; color: rgba(244, 240, 230, 0.62); font-size: 0.66rem; line-height: 1.55; }
 .dock-note svg { flex: 0 0 auto; margin-top: 0.05rem; color: #c4f25a; }
+.carried-question { display: grid; grid-template-columns: 1fr auto; gap: 0.35rem 0.7rem; margin: -0.2rem 0 0.85rem; padding: 0.58rem 0.65rem; color: rgba(244, 240, 230, 0.78); background: rgba(6, 22, 47, 0.55); border-left: 2px solid rgba(207, 176, 106, 0.65); font: 500 0.61rem/1.4 "Manrope", sans-serif; }
+.carried-question.is-pinned { border-left-color: #c4f25a; background: rgba(196, 242, 90, 0.09); }
+.carried-question > div { display: inline-flex; align-items: center; gap: 0.35rem; color: var(--signal-gold-light, #e0c98e); font-size: 0.5rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.carried-question p { grid-column: 1 / -1; margin: 0; }
+.carried-question button { display: inline-flex; align-items: center; gap: 0.3rem; align-self: start; padding: 0.24rem 0.35rem; color: #f4f0e6; background: transparent; border: 1px solid rgba(244, 240, 230, 0.24); font: 700 0.46rem/1 "Manrope", sans-serif; letter-spacing: 0.07em; text-transform: uppercase; }
+.carried-question button:hover { color: #1d131f; background: #c4f25a; }
 .signal-chatbox { border-color: rgba(244, 240, 230, 0.17) !important; border-radius: 0 !important; background: #271a29 !important; box-shadow: none !important; }
 .chat-loading { display: grid; place-items: center; min-height: 14rem; color: rgba(244, 240, 230, 0.67); border: 1px solid rgba(244, 240, 230, 0.17); background: #271a29; font-size: 0.68rem; letter-spacing: 0.075em; text-transform: uppercase; }
 .signal-chatbox [data-radix-scroll-area-viewport] { scrollbar-color: rgba(196, 242, 90, 0.5) transparent; }
@@ -353,6 +362,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid #c4f25a; outline-offs
   .conversation-dock { width: 100%; max-height: 94svh; padding: 1rem; border-bottom: none; }
   .conversation-layer.is-redirecting .conversation-dock { animation-name: dock-guide-handoff-out-mobile; animation-duration: 210ms; }
   .redirect-status { top: max(0.8rem, env(safe-area-inset-top)); right: 1rem; left: 1rem; min-width: 0; }
+  .dock-return { margin-top: 0.6rem; }
+  .carried-question { margin-bottom: 0.65rem; }
   .dock-download span { display: none; }
   .dock-download { width: 2.3rem; justify-content: center; padding: 0; }
   .signal-chatbox { height: min(47svh, 410px) !important; }

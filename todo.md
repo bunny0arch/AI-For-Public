@@ -172,3 +172,7 @@
 - [x] Show a visible “Switching to…” destination label during each guide redirect.
 - [x] Preserve the user’s relevant question and short conversation context for the destination guide.
 - [x] Optimize the redirect fade-and-pull motion for small mobile screens and verify it live.
+- [ ] Add supported-device haptic feedback during a guide handoff without affecting desktop or reduced-motion users.
+- [ ] Let visitors pin or unpin the carried question in the destination guide chat.
+- [ ] Add a Back to previous guide action that restores the source guide without overlapping conversation docks.
+- [ ] Verify the haptic guard, pin state, and back-guide handoff on the live Vercel deployment.

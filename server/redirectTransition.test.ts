@@ -18,7 +18,11 @@ describe("guide redirect handoff", () => {
     expect(homeSource).toContain("setIsGuideRedirecting(true)");
     expect(homeSource).toContain("Switching to");
     expect(homeSource).toContain("carriedQuestion");
-    expect(homeSource).toContain("role: \"user\" as const, content: carriedQuestion");
+    expect(homeSource).toContain("role: \"user\" as const, content: nextCarriedQuestion");
+    expect(homeSource).toContain("triggerHandoffHaptic");
+    expect(homeSource).toContain("navigator as Navigator");
+    expect(homeSource).toContain("returnToPreviousGuide");
+    expect(homeSource).toContain("Pinned original question");
     expect(unmountIndex).toBeGreaterThan(-1);
     expect(destinationIndex).toBeGreaterThan(unmountIndex);
     expect(homeSource).toContain("window.requestAnimationFrame(() => {");
@@ -34,5 +38,7 @@ describe("guide redirect handoff", () => {
     expect(styleSource).toContain("dock-guide-handoff-out");
     expect(styleSource).toContain("dock-guide-handoff-out-mobile");
     expect(styleSource).toContain(".redirect-status");
+    expect(styleSource).toContain(".dock-return");
+    expect(styleSource).toContain(".carried-question");
   });
 });
