@@ -169,6 +169,6 @@
 - [x] Add a staged fade-and-pull transition for scoped guide-to-guide redirects.
 - [x] Ensure redirect handoffs never render two active conversation docks at the same time.
 - [x] Verify a live cross-pathway redirect completes with a smooth single-dock handoff.
-- [ ] Show a visible “Switching to…” destination label during each guide redirect.
-- [ ] Preserve the user’s relevant question and short conversation context for the destination guide.
-- [ ] Optimize the redirect fade-and-pull motion for small mobile screens and verify it live.
+- [x] Show a visible “Switching to…” destination label during each guide redirect.
+- [x] Preserve the user’s relevant question and short conversation context for the destination guide.
+- [x] Optimize the redirect fade-and-pull motion for small mobile screens and verify it live.
