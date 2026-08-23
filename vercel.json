@@ -11,7 +11,7 @@
     },
     {
       "source": "/manus-storage/:path*",
-      "destination": "/api/manus-storage/:path*"
+      "destination": "/api/manus-storage/[...path]"
     }
   ]
 }

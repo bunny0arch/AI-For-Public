@@ -16,6 +16,9 @@ describe("Vercel packaging", () => {
     expect(packageJson.scripts?.["vercel-build"]).toContain(
       "--outfile=api/[...path].js",
     );
+    expect(packageJson.scripts?.["vercel-build"]).toContain(
+      "--outfile=api/manus-storage/[...path].js",
+    );
     expect(
       fs.existsSync(path.join(projectRoot, "server", "vercelAdapter.ts")),
     ).toBe(true);
@@ -24,6 +27,11 @@ describe("Vercel packaging", () => {
     ).toBe(false);
     expect(
       fs.existsSync(path.join(projectRoot, "api", "[...path].js")),
+    ).toBe(true);
+    expect(
+      fs.existsSync(
+        path.join(projectRoot, "api", "manus-storage", "[...path].js"),
+      ),
     ).toBe(true);
   });
 
@@ -39,7 +47,7 @@ describe("Vercel packaging", () => {
       },
       {
         source: "/manus-storage/:path*",
-        destination: "/api/manus-storage/:path*",
+        destination: "/api/manus-storage/[...path]",
       },
     ]);
   });
