@@ -100,7 +100,7 @@
 - [x] Lift the late-pathway image exposure and reduce scrim density so panels 04–09 read more clearly on compact screens.
 - [x] Capture post-exposure desktop and compact visual evidence for readable panels 04–09 and their clearer subjects.
 - [x] Capture rendered Open Field panel evidence showing the people-centered community-mapping scene in context.
-- [ ] Obtain a fresh trusted desktop review for panels 04–09 after the final exposure adjustment.
+- [x] Obtain a fresh trusted desktop review for panels 04–09 after the final exposure adjustment.
 - [ ] Obtain a fresh trusted compact review for panels 04–09 and the Open Field composition after the final exposure adjustment.
 - [x] Verify ElevenLabs voice-service availability and select clear language-aware voice behavior.
 - [x] Add a secure server-side ElevenLabs speech endpoint that keeps the API key private.
