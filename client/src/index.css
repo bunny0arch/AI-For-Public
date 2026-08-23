@@ -401,3 +401,108 @@ button:focus-visible, a:focus-visible { outline-color: var(--signal-gold-light);
 @media (prefers-reduced-motion: reduce) {
   .hero-shell { background: var(--royal-navy-deep) url("/manus-storage/field-reference_86704408.jpg") center/cover no-repeat; }
 }
+
+/* Ordered stack: each arriving pathway has a higher layer and the same centered geometry. */
+.community-grid {
+  display: block;
+  padding-bottom: clamp(6rem, 13vh, 10rem);
+  perspective: none;
+  transform-style: flat;
+}
+
+.pathway-panel,
+.panel-wide,
+.panel-tall,
+.panel-standard,
+.panel-feature,
+.pathway-panel:nth-child(3n),
+.pathway-panel:nth-child(4n),
+.pathway-panel:nth-child(5n),
+.pathway-panel:nth-child(9) {
+  position: sticky;
+  top: calc(1.25rem + (var(--panel-index) * 0.36rem));
+  width: min(100%, 68rem);
+  min-height: clamp(20rem, 48vh, 28rem);
+  margin: 0 auto clamp(14rem, 31vh, 23rem);
+  transform: none;
+  transform-origin: center top;
+  z-index: calc(20 + var(--panel-index));
+  box-shadow: 0 22px 48px rgba(4, 20, 44, 0.24);
+}
+
+.pathway-panel:last-child { margin-bottom: 0; }
+.pathway-panel:hover,
+.pathway-panel:focus-within {
+  transform: none;
+  box-shadow: 0 26px 56px rgba(4, 20, 44, 0.34);
+  filter: none;
+}
+.panel-button { border-color: rgba(207, 176, 106, 0.26); }
+.panel-button:hover { background: rgba(132, 31, 62, 0.18); }
+
+/* Conversation language belongs beside the active chat, not in the site masthead. */
+.dock-language-switcher { position: relative; }
+.dock-language-control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  height: 2.3rem;
+  padding: 0 0.68rem;
+  color: var(--signal-gold-light);
+  background: transparent;
+  border: 1px solid rgba(207, 176, 106, 0.48);
+  font: 700 0.55rem/1 "Manrope", sans-serif;
+  letter-spacing: 0.075em;
+  transition: color 160ms var(--ease-out, ease), background 160ms var(--ease-out, ease), transform 160ms var(--ease-out, ease);
+}
+.dock-language-control:hover,
+.dock-language-control[aria-expanded="true"] {
+  color: var(--royal-navy-deep);
+  background: var(--signal-gold);
+  transform: translateY(-1px);
+}
+.dock-language-menu {
+  top: calc(100% + 0.48rem);
+  right: 0;
+  min-width: 8.8rem;
+}
+
+@media (max-width: 860px) {
+  .community-grid { padding-bottom: 5rem; }
+  .pathway-panel,
+  .panel-wide,
+  .panel-tall,
+  .panel-standard,
+  .panel-feature,
+  .pathway-panel:nth-child(3n),
+  .pathway-panel:nth-child(4n),
+  .pathway-panel:nth-child(5n),
+  .pathway-panel:nth-child(9) {
+    position: sticky;
+    top: calc(0.75rem + (var(--panel-index) * 0.22rem));
+    width: 100%;
+    min-height: 18rem;
+    margin: 0 0 clamp(9rem, 22vh, 13rem);
+    box-shadow: 0 16px 38px rgba(4, 20, 44, 0.23);
+  }
+  .pathway-panel:last-child { margin-bottom: 0; }
+}
+
+@media (max-width: 520px) {
+  .dock-language-control { width: 2.3rem; padding: 0; }
+  .dock-language-control span { display: none; }
+  .dock-language-menu { right: -2.85rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pathway-panel,
+  .panel-wide,
+  .panel-tall,
+  .panel-standard,
+  .panel-feature,
+  .pathway-panel:nth-child(3n),
+  .pathway-panel:nth-child(4n),
+  .pathway-panel:nth-child(5n),
+  .pathway-panel:nth-child(9) { transform: none; }
+}

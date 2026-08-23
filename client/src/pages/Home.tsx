@@ -116,6 +116,7 @@ export default function Home() {
     chatMutation.reset();
     if (closeTimerRef.current) window.clearTimeout(closeTimerRef.current);
     setIsConversationClosing(false);
+    setLanguageMenuOpen(false);
     setSelectedPathway(pathway);
     setMessages([{ role: "assistant", content: pathway.greeting }]);
   }
@@ -202,19 +203,6 @@ export default function Home() {
             <a href="#pathways">Pathways</a>
             <button type="button" onClick={focusPathways}>Start a conversation</button>
           </nav>
-          <div className="language-switcher">
-            <button className="language-control" type="button" onClick={() => setLanguageMenuOpen((open) => !open)} aria-expanded={languageMenuOpen} aria-controls="language-menu">
-              <Languages size={15} strokeWidth={1.7} />
-              <span>{language}</span>
-            </button>
-            <div className={`language-menu ${languageMenuOpen ? "is-open" : ""}`} id="language-menu" role="menu" aria-label="Choose conversation language">
-              {languageOptions.map((option) => (
-                <button key={option} type="button" role="menuitem" onClick={() => selectLanguage(option)} className={language === option ? "is-selected" : ""}>
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
         </header>
 
         <div className="hero-content" id="top">
@@ -306,6 +294,7 @@ export default function Home() {
               className={`pathway-panel panel-${pathway.size}`}
               key={pathway.id}
               role="listitem"
+              data-pathway-index={index}
               style={{ "--panel-index": index } as CSSProperties}
             >
               {pathway.image && (
@@ -369,6 +358,26 @@ export default function Home() {
                 <h2>{selectedPathway.title}</h2>
               </div>
               <div className="dock-actions">
+                <div className="language-switcher dock-language-switcher">
+                  <button
+                    className="dock-language-control"
+                    type="button"
+                    onClick={() => setLanguageMenuOpen((open) => !open)}
+                    aria-expanded={languageMenuOpen}
+                    aria-controls="chat-language-menu"
+                    aria-label={`Conversation language: ${language}`}
+                  >
+                    <Languages size={15} strokeWidth={1.7} />
+                    <span>{language}</span>
+                  </button>
+                  <div className={`language-menu dock-language-menu ${languageMenuOpen ? "is-open" : ""}`} id="chat-language-menu" role="menu" aria-label="Choose conversation language">
+                    {languageOptions.map((option) => (
+                      <button key={option} type="button" role="menuitem" onClick={() => selectLanguage(option)} className={language === option ? "is-selected" : ""}>
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                </div>
                 <button className="dock-download" type="button" onClick={downloadConversation} aria-label="Download conversation">
                   <Download size={16} strokeWidth={1.65} />
                   <span>Download</span>

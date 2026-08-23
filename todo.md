@@ -62,3 +62,7 @@
 - [x] Validate the revised color system across desktop and mobile viewports.
 - [x] Ensure the glass-flower hero video loops continuously while the page remains active.
 - [x] Validate continuous playback and the reduced-motion fallback at runtime.
+- [x] Replace the offset pathway layout with a deterministic first-in-last-out stacked scroll sequence.
+- [x] Ensure the stack layers forward cleanly and unwinds in reverse when scrolling back to earlier pathways.
+- [x] Remove the masthead language control and place the language selector inside the focused chat dock.
+- [x] Validate desktop/mobile stack flow, reverse unwind, and chat-local language selection.
