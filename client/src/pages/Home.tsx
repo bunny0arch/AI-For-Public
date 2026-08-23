@@ -27,12 +27,15 @@ const heroVideoUrl = `${publicMediaBase}glass-flower.mp4`;
 const fieldReferenceUrl = `${publicMediaBase}field-reference.jpg`;
 const AIChatBox = lazy(() => import("@/components/AIChatBox").then((module) => ({ default: module.AIChatBox })));
 const REDIRECT_HANDOFF_MS = 250;
+const REDIRECT_STATUS_SETTLE_MS = 180;
 
 type RedirectOrigin = {
   pathway: CommunityPathway;
   messages: Message[];
   carriedQuestion: string | null;
 };
+
+type HandoffStage = "leaving" | "opening" | null;
 
 function CursorSphere({ visible, popping }: { visible: boolean; popping: boolean }) {
   return <span className={`cursor-sphere ${visible ? "is-visible" : ""} ${popping ? "is-popping" : ""}`} aria-hidden="true" />;
@@ -134,6 +137,7 @@ export default function Home() {
   const [redirectOrigin, setRedirectOrigin] = useState<RedirectOrigin | null>(null);
   const [carriedQuestion, setCarriedQuestion] = useState<string | null>(null);
   const [isCarriedQuestionPinned, setIsCarriedQuestionPinned] = useState(false);
+  const [handoffStage, setHandoffStage] = useState<HandoffStage>(null);
   const [chatError, setChatError] = useState<string | null>(null);
   const siteRef = useRef<HTMLElement>(null);
   const dialogRef = useRef<HTMLElement>(null);
@@ -188,6 +192,9 @@ export default function Home() {
     () => (selectedPathway ? `${selectedPathway.title} conversation` : "Community conversation"),
     [selectedPathway]
   );
+  const shouldRenderConversationLayer = Boolean(selectedPathway || (isGuideRedirecting && redirectDestination));
+  const handoffProgress = handoffStage === "opening" ? 0.82 : 0.42;
+  const handoffProgressLabel = handoffStage === "opening" ? "Opening the next guide" : "Securing your conversation context";
 
   useEffect(() => {
     if (selectedPathway && !isConversationClosing) {
@@ -272,6 +279,7 @@ export default function Home() {
     setRedirectOrigin(null);
     setCarriedQuestion(null);
     setIsCarriedQuestionPinned(false);
+    setHandoffStage(null);
     setSelectedPathway(pathway);
     setMessages([{ role: "assistant", content: pathway.greeting }]);
   }
@@ -289,6 +297,7 @@ export default function Home() {
         setRedirectOrigin(null);
         setCarriedQuestion(null);
         setIsCarriedQuestionPinned(false);
+        setHandoffStage(null);
       }, 260);
     }
   }
@@ -309,6 +318,7 @@ export default function Home() {
     setRedirectOrigin({ pathway: origin, messages, carriedQuestion: nextCarriedQuestion });
     setCarriedQuestion(nextCarriedQuestion);
     setIsCarriedQuestionPinned(false);
+    setHandoffStage("leaving");
     setIsGuideRedirecting(true);
     triggerHandoffHaptic();
 
@@ -316,14 +326,18 @@ export default function Home() {
     redirectTimerRef.current = window.setTimeout(() => {
       setSelectedPathway(null);
       window.requestAnimationFrame(() => {
+        setHandoffStage("opening");
         setSelectedPathway(destination);
         setMessages([
           ...(nextCarriedQuestion ? [{ role: "user" as const, content: nextCarriedQuestion }] : []),
           { role: "assistant", content: redirectMessage },
           { role: "assistant", content: destination.greeting },
         ]);
-        setIsGuideRedirecting(false);
-        redirectTimerRef.current = null;
+        redirectTimerRef.current = window.setTimeout(() => {
+          setIsGuideRedirecting(false);
+          setHandoffStage(null);
+          redirectTimerRef.current = null;
+        }, REDIRECT_STATUS_SETTLE_MS);
       });
     }, REDIRECT_HANDOFF_MS);
   }
@@ -337,6 +351,7 @@ export default function Home() {
     setChatError(null);
     setRedirectDestination(redirectOrigin.pathway);
     setHandoffContext(`Returning to ${redirectOrigin.pathway.guide.name}.`);
+    setHandoffStage("leaving");
     setIsGuideRedirecting(true);
     triggerHandoffHaptic();
 
@@ -344,13 +359,17 @@ export default function Home() {
     redirectTimerRef.current = window.setTimeout(() => {
       setSelectedPathway(null);
       window.requestAnimationFrame(() => {
+        setHandoffStage("opening");
         setSelectedPathway(redirectOrigin.pathway);
         setMessages(redirectOrigin.messages);
         setRedirectOrigin(null);
         setCarriedQuestion(null);
         setIsCarriedQuestionPinned(false);
-        setIsGuideRedirecting(false);
-        redirectTimerRef.current = null;
+        redirectTimerRef.current = window.setTimeout(() => {
+          setIsGuideRedirecting(false);
+          setHandoffStage(null);
+          redirectTimerRef.current = null;
+        }, REDIRECT_STATUS_SETTLE_MS);
       });
     }, REDIRECT_HANDOFF_MS);
   }
@@ -616,7 +635,7 @@ export default function Home() {
         <button type="button" onClick={focusPathways}>Return to pathways <ArrowRight size={16} strokeWidth={1.7} /></button>
       </footer>
 
-      {selectedPathway && (
+      {shouldRenderConversationLayer && (
         <div className={`conversation-layer ${isConversationClosing ? "is-closing" : ""} ${isGuideRedirecting ? "is-redirecting" : ""}`} role="presentation" onMouseDown={(event) => {
           if (event.target === event.currentTarget) closePathway();
         }}>
@@ -625,9 +644,26 @@ export default function Home() {
               <span>Switching to</span>
               <strong>{redirectDestination.guide.name} · {redirectDestination.title}</strong>
               {handoffContext && <em>Your question is being carried forward.</em>}
+              <div
+                className="redirect-progress"
+                role="progressbar"
+                aria-label="Guide handoff progress"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={Math.round(handoffProgress * 100)}
+                aria-valuetext={handoffProgressLabel}
+              >
+                <div className="redirect-progress-meta">
+                  <span>{handoffStage === "opening" ? "Step 2 of 2" : "Step 1 of 2"}</span>
+                  <span>{handoffProgressLabel}</span>
+                </div>
+                <span className="redirect-progress-track" aria-hidden="true">
+                  <span className="redirect-progress-fill" style={{ "--handoff-progress": handoffProgress } as CSSProperties} />
+                </span>
+              </div>
             </div>
           )}
-          <section className="conversation-dock" ref={dialogRef} role="dialog" aria-modal="true" aria-busy={isGuideRedirecting} aria-label={dialogLabel} tabIndex={-1}>
+          {selectedPathway && <section className="conversation-dock" ref={dialogRef} role="dialog" aria-modal="true" aria-busy={isGuideRedirecting} aria-label={dialogLabel} tabIndex={-1}>
             <div className="dock-header">
               <div>
                 <span className="dock-eyebrow">{selectedPathway.number} / {selectedPathway.guide.name} · {selectedPathway.guide.role}</span>
@@ -714,7 +750,7 @@ export default function Home() {
               />
             </Suspense>
             <div className="dock-bottom-note"><SendHorizonal size={14} strokeWidth={1.6} /> Ask in your own words. Short answers are welcome.</div>
-          </section>
+          </section>}
         </div>
       )}
     </main>

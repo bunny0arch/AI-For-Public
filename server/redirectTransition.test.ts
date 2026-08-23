@@ -23,6 +23,11 @@ describe("guide redirect handoff", () => {
     expect(homeSource).toContain("navigator as Navigator");
     expect(homeSource).toContain("returnToPreviousGuide");
     expect(homeSource).toContain("Pinned original question");
+    expect(homeSource).toContain("const REDIRECT_STATUS_SETTLE_MS = 180");
+    expect(homeSource).toContain("setHandoffStage(\"opening\")");
+    expect(homeSource).toContain("const shouldRenderConversationLayer = Boolean(selectedPathway || (isGuideRedirecting && redirectDestination));");
+    expect(homeSource).toContain("aria-label=\"Guide handoff progress\"");
+    expect(homeSource).toContain("Step 2 of 2");
     expect(unmountIndex).toBeGreaterThan(-1);
     expect(destinationIndex).toBeGreaterThan(unmountIndex);
     expect(homeSource).toContain("window.requestAnimationFrame(() => {");
@@ -38,6 +43,8 @@ describe("guide redirect handoff", () => {
     expect(styleSource).toContain("dock-guide-handoff-out");
     expect(styleSource).toContain("dock-guide-handoff-out-mobile");
     expect(styleSource).toContain(".redirect-status");
+    expect(styleSource).toContain(".redirect-progress");
+    expect(styleSource).toContain("redirect-progress-sheen");
     expect(styleSource).toContain(".dock-return");
     expect(styleSource).toContain(".carried-question");
   });
