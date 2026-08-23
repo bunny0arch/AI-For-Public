@@ -4,7 +4,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { invokeLLM } from "./_core/llm";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
-import { PATHWAY_IDS, ROUTING_MODEL, buildChatSystemPrompt, buildRouterSystemPrompt, detectDomainRoute } from "./chatConfig";
+import { PATHWAY_IDS, ROUTING_MODEL, buildChatSystemPrompt, buildRouterSystemPrompt, detectDomainRoute, hasModelRouterCredentials } from "./chatConfig";
 import { generateScopedResponse } from "./chatProviders";
 import { synthesizeGuideSpeech } from "./guideSpeech";
 import { getCommunityPathway } from "../shared/communityPathways";
@@ -47,39 +47,44 @@ export const appRouter = router({
         let targetId = detectDomainRoute(latestUserMessage.content);
 
         if (!targetId) {
-          const routing = await invokeLLM({
-            model: ROUTING_MODEL,
-            maxTokens: 110,
-            messages: [
-              { role: "system", content: buildRouterSystemPrompt(input.communityId) },
-              { role: "user", content: latestUserMessage.content },
-            ],
-            response_format: {
-              type: "json_schema",
-              json_schema: {
-                name: "collective_signal_route",
-                strict: true,
-                schema: {
-                  type: "object",
-                  properties: {
-                    targetId: { type: "string", enum: PATHWAY_IDS },
-                  },
-                  required: ["targetId"],
-                  additionalProperties: false,
-                },
-              },
-            },
-          });
-
-          const routingContent = routing.choices[0]?.message?.content;
           targetId = "open-field";
-          try {
-            const parsed = typeof routingContent === "string" ? JSON.parse(routingContent) : null;
-            if (parsed && typeof parsed.targetId === "string" && PATHWAY_IDS.includes(parsed.targetId)) {
-              targetId = parsed.targetId;
+
+          if (hasModelRouterCredentials()) {
+            try {
+              const routing = await invokeLLM({
+                model: ROUTING_MODEL,
+                maxTokens: 110,
+                messages: [
+                  { role: "system", content: buildRouterSystemPrompt(input.communityId) },
+                  { role: "user", content: latestUserMessage.content },
+                ],
+                response_format: {
+                  type: "json_schema",
+                  json_schema: {
+                    name: "collective_signal_route",
+                    strict: true,
+                    schema: {
+                      type: "object",
+                      properties: {
+                        targetId: { type: "string", enum: PATHWAY_IDS },
+                      },
+                      required: ["targetId"],
+                      additionalProperties: false,
+                    },
+                  },
+                },
+              });
+
+              const routingContent = routing.choices[0]?.message?.content;
+              const parsed = typeof routingContent === "string" ? JSON.parse(routingContent) : null;
+              if (parsed && typeof parsed.targetId === "string" && PATHWAY_IDS.includes(parsed.targetId)) {
+                targetId = parsed.targetId;
+              }
+            } catch {
+              // Vercel does not receive Manus-internal router credentials. Route
+              // ambiguous questions to the dedicated Open Field instead of failing.
+              targetId = "open-field";
             }
-          } catch {
-            targetId = "open-field";
           }
         }
 

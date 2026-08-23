@@ -5,6 +5,13 @@ export const ROUTING_MODEL = "gpt-5-nano";
 
 export const PATHWAY_IDS = communityPathways.map((pathway) => pathway.id) as [string, ...string[]];
 
+export function hasModelRouterCredentials(
+  env?: { BUILT_IN_FORGE_API_URL?: string; BUILT_IN_FORGE_API_KEY?: string }
+) {
+  const source = env ?? (process.env as { BUILT_IN_FORGE_API_URL?: string; BUILT_IN_FORGE_API_KEY?: string });
+  return Boolean(source.BUILT_IN_FORGE_API_URL && source.BUILT_IN_FORGE_API_KEY);
+}
+
 const DOMAIN_CUES: Array<{ id: string; cues: string[] }> = [
   { id: "farmers", cues: ["farm", "farmer", "crop", "tomato", "paddy", "rice", "wheat", "leaf", "leaves", "soil", "seed", "harvest", "irrigation", "pest", "pesticide", "fungus", "plant", "plants", "fertilizer", "fertiliser"] },
   { id: "fishermen", cues: ["fish", "fishing", "fisherman", "fishermen", "boat", "sea", "coast", "coastal", "net", "catch", "harbor", "harbour", "tide", "marine"] },

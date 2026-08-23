@@ -99,14 +99,21 @@ export default function Home() {
   const [cursorPopping, setCursorPopping] = useState(false);
   const [isGuideSpeaking, setIsGuideSpeaking] = useState(false);
   const [isConversationClosing, setIsConversationClosing] = useState(false);
+  const [chatError, setChatError] = useState<string | null>(null);
   const siteRef = useRef<HTMLElement>(null);
   const dialogRef = useRef<HTMLElement>(null);
   const closeTimerRef = useRef<number | null>(null);
   const popTimerRef = useRef<number | null>(null);
   const guideAudioRef = useRef<HTMLAudioElement | null>(null);
+  const lastChatRequestRef = useRef<{
+    communityId: string;
+    language: ConversationLanguage;
+    messages: Array<{ role: "user" | "assistant"; content: string }>;
+  } | null>(null);
 
   const chatMutation = trpc.chat.respond.useMutation({
     onSuccess: (result) => {
+      setChatError(null);
       if (result.kind === "redirect") {
         const destination = communityPathways.find((pathway) => pathway.id === result.target.id) ?? communityPathways[8];
         setSelectedPathway(destination);
@@ -119,15 +126,8 @@ export default function Home() {
       setMessages((current) => [...current, { role: "assistant", content: result.content }]);
     },
     onError: () => {
-      setMessages((current) => [
-        ...current,
-        {
-          role: "assistant",
-          content:
-            "I’m unable to prepare a response right now. Please try again in a moment, or start with one of the suggested questions.",
-        },
-      ]);
-      toast.error("The conversation is taking longer than expected. Please try again.");
+      setChatError("We could not prepare a response just now. Retry this question, or choose a more specific pathway.");
+      toast.error("That response did not complete. Your question has been kept so you can retry.");
     },
   });
 
@@ -231,6 +231,7 @@ export default function Home() {
     if (closeTimerRef.current) window.clearTimeout(closeTimerRef.current);
     setIsConversationClosing(false);
     setLanguageMenuOpen(false);
+    setChatError(null);
     setSelectedPathway(pathway);
     setMessages([{ role: "assistant", content: pathway.greeting }]);
   }
@@ -254,12 +255,22 @@ export default function Home() {
     const conversationMessages = nextMessages.filter(
       (message): message is { role: "user" | "assistant"; content: string } => message.role !== "system"
     );
-    setMessages(nextMessages);
-    chatMutation.mutate({
+    const request = {
       communityId: selectedPathway.id,
       language,
       messages: conversationMessages,
-    });
+    };
+    lastChatRequestRef.current = request;
+    setChatError(null);
+    setMessages(nextMessages);
+    chatMutation.mutate(request);
+  }
+
+  function retryLastMessage() {
+    const request = lastChatRequestRef.current;
+    if (!request || chatMutation.isPending) return;
+    setChatError(null);
+    chatMutation.mutate(request);
   }
 
   function selectLanguage(nextLanguage: ConversationLanguage) {
@@ -564,6 +575,8 @@ export default function Home() {
                 suggestedPrompts={selectedPathway.starterPrompts}
                 emptyStateMessage="Start with a practical question"
                 className="signal-chatbox"
+                errorMessage={chatError}
+                onRetry={retryLastMessage}
               />
             </Suspense>
             <div className="dock-bottom-note"><SendHorizonal size={14} strokeWidth={1.6} /> Ask in your own words. Short answers are welcome.</div>

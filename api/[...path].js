@@ -1097,6 +1097,10 @@ function getCommunityPathway(id) {
 // server/chatConfig.ts
 var ROUTING_MODEL = "gpt-5-nano";
 var PATHWAY_IDS = communityPathways.map((pathway) => pathway.id);
+function hasModelRouterCredentials(env) {
+  const source = env ?? process.env;
+  return Boolean(source.BUILT_IN_FORGE_API_URL && source.BUILT_IN_FORGE_API_KEY);
+}
 var DOMAIN_CUES = [
   { id: "farmers", cues: ["farm", "farmer", "crop", "tomato", "paddy", "rice", "wheat", "leaf", "leaves", "soil", "seed", "harvest", "irrigation", "pest", "pesticide", "fungus", "plant", "plants", "fertilizer", "fertiliser"] },
   { id: "fishermen", cues: ["fish", "fishing", "fisherman", "fishermen", "boat", "sea", "coast", "coastal", "net", "catch", "harbor", "harbour", "tide", "marine"] },
@@ -1339,38 +1343,40 @@ var appRouter = router({
       }
       let targetId = detectDomainRoute(latestUserMessage.content);
       if (!targetId) {
-        const routing = await invokeLLM({
-          model: ROUTING_MODEL,
-          maxTokens: 110,
-          messages: [
-            { role: "system", content: buildRouterSystemPrompt(input.communityId) },
-            { role: "user", content: latestUserMessage.content }
-          ],
-          response_format: {
-            type: "json_schema",
-            json_schema: {
-              name: "collective_signal_route",
-              strict: true,
-              schema: {
-                type: "object",
-                properties: {
-                  targetId: { type: "string", enum: PATHWAY_IDS }
-                },
-                required: ["targetId"],
-                additionalProperties: false
-              }
-            }
-          }
-        });
-        const routingContent = routing.choices[0]?.message?.content;
         targetId = "open-field";
-        try {
-          const parsed = typeof routingContent === "string" ? JSON.parse(routingContent) : null;
-          if (parsed && typeof parsed.targetId === "string" && PATHWAY_IDS.includes(parsed.targetId)) {
-            targetId = parsed.targetId;
+        if (hasModelRouterCredentials()) {
+          try {
+            const routing = await invokeLLM({
+              model: ROUTING_MODEL,
+              maxTokens: 110,
+              messages: [
+                { role: "system", content: buildRouterSystemPrompt(input.communityId) },
+                { role: "user", content: latestUserMessage.content }
+              ],
+              response_format: {
+                type: "json_schema",
+                json_schema: {
+                  name: "collective_signal_route",
+                  strict: true,
+                  schema: {
+                    type: "object",
+                    properties: {
+                      targetId: { type: "string", enum: PATHWAY_IDS }
+                    },
+                    required: ["targetId"],
+                    additionalProperties: false
+                  }
+                }
+              }
+            });
+            const routingContent = routing.choices[0]?.message?.content;
+            const parsed = typeof routingContent === "string" ? JSON.parse(routingContent) : null;
+            if (parsed && typeof parsed.targetId === "string" && PATHWAY_IDS.includes(parsed.targetId)) {
+              targetId = parsed.targetId;
+            }
+          } catch {
+            targetId = "open-field";
           }
-        } catch {
-          targetId = "open-field";
         }
       }
       const resolvedTargetId = targetId ?? "open-field";

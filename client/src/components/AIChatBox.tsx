@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { Loader2, Send, User, Sparkles } from "lucide-react";
+import { AlertCircle, Loader2, RotateCcw, Send, User, Sparkles } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
 /**
@@ -56,6 +56,12 @@ export type AIChatBoxProps = {
    * Click to send directly
    */
   suggestedPrompts?: string[];
+
+  /** A retryable request error displayed without discarding the user's question. */
+  errorMessage?: string | null;
+
+  /** Retries the most recently submitted request. */
+  onRetry?: () => void;
 };
 
 /**
@@ -118,6 +124,8 @@ export function AIChatBox({
   height = "600px",
   emptyStateMessage = "Start a conversation with AI",
   suggestedPrompts,
+  errorMessage,
+  onRetry,
 }: AIChatBoxProps) {
   const [input, setInput] = useState("");
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -184,6 +192,12 @@ export function AIChatBox({
       e.preventDefault();
       handleSubmit(e);
     }
+  };
+
+  const handleRetry = () => {
+    onRetry?.();
+    setInput("");
+    textareaRef.current?.focus();
   };
 
   return (
@@ -276,6 +290,8 @@ export function AIChatBox({
               {isLoading && (
                 <div
                   className="flex items-start gap-3"
+                  role="status"
+                  aria-live="polite"
                   style={
                     minHeightForLastMessage > 0
                       ? { minHeight: `${minHeightForLastMessage}px` }
@@ -286,8 +302,32 @@ export function AIChatBox({
                     <Sparkles className="size-4 text-primary" />
                   </div>
                   <div className="rounded-lg bg-muted px-4 py-2.5">
-                    <Loader2 className="size-4 animate-spin text-muted-foreground" />
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Loader2 className="size-4 animate-spin" />
+                      <span>Checking your question</span>
+                      <span className="flex gap-1" aria-hidden="true">
+                        <span className="size-1 rounded-full bg-current animate-pulse" />
+                        <span className="size-1 rounded-full bg-current animate-pulse [animation-delay:150ms]" />
+                        <span className="size-1 rounded-full bg-current animate-pulse [animation-delay:300ms]" />
+                      </span>
+                    </div>
                   </div>
+                </div>
+              )}
+
+              {errorMessage && (
+                <div className="flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-3 text-sm" role="alert">
+                  <AlertCircle className="mt-0.5 size-4 shrink-0 text-destructive" />
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium text-foreground">Your question is still here.</p>
+                    <p className="mt-0.5 text-muted-foreground">{errorMessage}</p>
+                  </div>
+                  {onRetry && (
+                    <Button type="button" variant="outline" size="sm" onClick={handleRetry} className="shrink-0">
+                      <RotateCcw className="size-3.5" />
+                      Retry
+                    </Button>
+                  )}
                 </div>
               )}
             </div>

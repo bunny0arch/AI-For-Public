@@ -159,3 +159,7 @@
 - [x] Confirm no application-code correction is required: Vercel routing and the chat procedure are healthy, and the configured OpenRouter fallback resolves the provider failure.
 - [x] Replace the rejected Vercel Gemini credential with the user-approved replacement value and run one final text-only chat verification.
 - [x] Add the user-confirmed OpenRouter credential from the supplied file to Vercel and verify the configured fallback with one final text-only chat check.
+- [ ] Diagnose the newly reported live Vercel chat failure without invoking ElevenLabs.
+- [ ] Add an in-chat loading indicator with accessible status messaging during a response request.
+- [ ] Add clear retryable chat error feedback that retains the user’s draft and works across all scoped pathways.
+- [ ] Verify one live text-only chat response and the enhanced loading/error states after deployment.
