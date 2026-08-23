@@ -166,3 +166,6 @@
 - [x] Keep greetings and basic conversational messages with the currently selected community guide.
 - [x] Preserve deterministic redirects only for messages that clearly belong to another designated pathway.
 - [x] Verify a live greeting remains in the selected guide chat after the routing refinement.
+- [ ] Add a staged fade-and-pull transition for scoped guide-to-guide redirects.
+- [ ] Ensure redirect handoffs never render two active conversation docks at the same time.
+- [ ] Verify a live cross-pathway redirect completes with a smooth single-dock handoff.

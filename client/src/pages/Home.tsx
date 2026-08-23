@@ -23,6 +23,7 @@ const markUrl = `${publicMediaBase}collective-mark.png`;
 const heroVideoUrl = `${publicMediaBase}glass-flower.mp4`;
 const fieldReferenceUrl = `${publicMediaBase}field-reference.jpg`;
 const AIChatBox = lazy(() => import("@/components/AIChatBox").then((module) => ({ default: module.AIChatBox })));
+const REDIRECT_HANDOFF_MS = 250;
 
 function CursorSphere({ visible, popping }: { visible: boolean; popping: boolean }) {
   return <span className={`cursor-sphere ${visible ? "is-visible" : ""} ${popping ? "is-popping" : ""}`} aria-hidden="true" />;
@@ -99,10 +100,12 @@ export default function Home() {
   const [cursorPopping, setCursorPopping] = useState(false);
   const [isGuideSpeaking, setIsGuideSpeaking] = useState(false);
   const [isConversationClosing, setIsConversationClosing] = useState(false);
+  const [isGuideRedirecting, setIsGuideRedirecting] = useState(false);
   const [chatError, setChatError] = useState<string | null>(null);
   const siteRef = useRef<HTMLElement>(null);
   const dialogRef = useRef<HTMLElement>(null);
   const closeTimerRef = useRef<number | null>(null);
+  const redirectTimerRef = useRef<number | null>(null);
   const popTimerRef = useRef<number | null>(null);
   const guideAudioRef = useRef<HTMLAudioElement | null>(null);
   const lastChatRequestRef = useRef<{
@@ -116,11 +119,7 @@ export default function Home() {
       setChatError(null);
       if (result.kind === "redirect") {
         const destination = communityPathways.find((pathway) => pathway.id === result.target.id) ?? communityPathways[8];
-        setSelectedPathway(destination);
-        setMessages([
-          { role: "assistant", content: result.content },
-          { role: "assistant", content: destination.greeting },
-        ]);
+        beginRedirectHandoff(destination, result.content);
         return;
       }
       setMessages((current) => [...current, { role: "assistant", content: result.content }]);
@@ -166,6 +165,7 @@ export default function Home() {
 
   useEffect(() => () => {
     if (closeTimerRef.current) window.clearTimeout(closeTimerRef.current);
+    if (redirectTimerRef.current) window.clearTimeout(redirectTimerRef.current);
     if (popTimerRef.current) window.clearTimeout(popTimerRef.current);
     guideAudioRef.current?.pause();
   }, []);
@@ -227,8 +227,10 @@ export default function Home() {
   }, []);
 
   function openPathway(pathway: CommunityPathway) {
+    if (isGuideRedirecting) return;
     chatMutation.reset();
     if (closeTimerRef.current) window.clearTimeout(closeTimerRef.current);
+    if (redirectTimerRef.current) window.clearTimeout(redirectTimerRef.current);
     setIsConversationClosing(false);
     setLanguageMenuOpen(false);
     setChatError(null);
@@ -237,7 +239,7 @@ export default function Home() {
   }
 
   function closePathway() {
-    if (!chatMutation.isPending) {
+    if (!chatMutation.isPending && !isGuideRedirecting) {
       guideAudioRef.current?.pause();
       setIsGuideSpeaking(false);
       setIsConversationClosing(true);
@@ -246,6 +248,30 @@ export default function Home() {
         setIsConversationClosing(false);
       }, 260);
     }
+  }
+
+  function beginRedirectHandoff(destination: CommunityPathway, redirectMessage: string) {
+    if (isGuideRedirecting) return;
+
+    guideAudioRef.current?.pause();
+    setIsGuideSpeaking(false);
+    setLanguageMenuOpen(false);
+    setChatError(null);
+    setIsGuideRedirecting(true);
+
+    if (redirectTimerRef.current) window.clearTimeout(redirectTimerRef.current);
+    redirectTimerRef.current = window.setTimeout(() => {
+      setSelectedPathway(null);
+      window.requestAnimationFrame(() => {
+        setSelectedPathway(destination);
+        setMessages([
+          { role: "assistant", content: redirectMessage },
+          { role: "assistant", content: destination.greeting },
+        ]);
+        setIsGuideRedirecting(false);
+        redirectTimerRef.current = null;
+      });
+    }, REDIRECT_HANDOFF_MS);
   }
 
   function sendMessage(content: string) {
@@ -327,7 +353,7 @@ export default function Home() {
   }
 
   return (
-    <main className={`site-shell ${selectedPathway && !isConversationClosing ? "is-conversation-active" : ""}`} ref={siteRef}>
+    <main className={`site-shell ${(selectedPathway && !isConversationClosing) || isGuideRedirecting ? "is-conversation-active" : ""}`} ref={siteRef}>
       <CursorSphere visible={cursorVisible} popping={cursorPopping} />
       <section className="hero-shell" aria-labelledby="hero-title">
         <video
@@ -509,10 +535,10 @@ export default function Home() {
       </footer>
 
       {selectedPathway && (
-        <div className={`conversation-layer ${isConversationClosing ? "is-closing" : ""}`} role="presentation" onMouseDown={(event) => {
+        <div className={`conversation-layer ${isConversationClosing ? "is-closing" : ""} ${isGuideRedirecting ? "is-redirecting" : ""}`} role="presentation" onMouseDown={(event) => {
           if (event.target === event.currentTarget) closePathway();
         }}>
-          <section className="conversation-dock" ref={dialogRef} role="dialog" aria-modal="true" aria-label={dialogLabel} tabIndex={-1}>
+          <section className="conversation-dock" ref={dialogRef} role="dialog" aria-modal="true" aria-busy={isGuideRedirecting} aria-label={dialogLabel} tabIndex={-1}>
             <div className="dock-header">
               <div>
                 <span className="dock-eyebrow">{selectedPathway.number} / {selectedPathway.guide.name} · {selectedPathway.guide.role}</span>
@@ -522,7 +548,7 @@ export default function Home() {
                     className="dock-voice"
                     type="button"
                     onClick={toggleGuideVoice}
-                    disabled={speakMutation.isPending}
+                    disabled={speakMutation.isPending || isGuideRedirecting}
                     aria-label={isGuideSpeaking ? `Stop ${selectedPathway.guide.name} speaking` : `Listen to ${selectedPathway.guide.name} speak`}
                   >
                     {isGuideSpeaking ? <Square size={13} fill="currentColor" /> : <Play size={15} fill="currentColor" />}
@@ -555,7 +581,7 @@ export default function Home() {
                   <Download size={16} strokeWidth={1.65} />
                   <span>Download</span>
                 </button>
-                <button className="dock-close" type="button" onClick={closePathway} disabled={chatMutation.isPending} aria-label="Close conversation">
+                <button className="dock-close" type="button" onClick={closePathway} disabled={chatMutation.isPending || isGuideRedirecting} aria-label="Close conversation">
                   <X size={19} strokeWidth={1.55} />
                 </button>
               </div>
@@ -569,7 +595,7 @@ export default function Home() {
               <AIChatBox
                 messages={messages}
                 onSendMessage={sendMessage}
-                isLoading={chatMutation.isPending}
+                isLoading={chatMutation.isPending || isGuideRedirecting}
                 height="min(52vh, 480px)"
                 placeholder="Ask your question…"
                 suggestedPrompts={selectedPathway.starterPrompts}
