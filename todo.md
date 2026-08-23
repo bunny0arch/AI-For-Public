@@ -178,3 +178,7 @@
 - [x] Verify the haptic guard, pin state, and back-guide handoff on the live Vercel deployment.
 - [x] Add a visible, accessible progress indicator for cross-guide handoffs that remains helpful during slow transitions.
 - [x] Verify the handoff progress indicator on desktop and compact mobile layouts, then publish the update.
+- [x] Audit all nine scoped AI guides, routing boundaries, and chat recovery controls without invoking guide voice playback.
+- [x] Audit all visible site controls, scrolling behavior, and interactive transitions across desktop and compact layouts.
+- [x] Audit reduced-motion behavior, core accessibility semantics, and browser/runtime errors; fix only verified defects.
+- [x] Document the completed full-site QA pass and publish any necessary corrections.
