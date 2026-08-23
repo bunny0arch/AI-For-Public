@@ -36,6 +36,50 @@ function SignalSculpture({ tone, className }: { tone: "navy" | "gold" | "red"; c
   );
 }
 
+function GuideArtFigure({ variant }: { variant: "resilience" | "community" }) {
+  if (variant === "resilience") {
+    return (
+      <svg className="panel-guide-illustration guide-illustration-resilience" viewBox="0 0 240 360" aria-hidden="true">
+        <path className="guide-rain guide-rain-a" d="M36 48l-12 28M74 25L62 54M114 42l-10 28M161 20l-8 28M202 52l-12 28" />
+        <circle className="guide-sun" cx="188" cy="72" r="28" />
+        <path className="guide-cloud" d="M151 83c9-22 42-20 48 1 16 0 24 11 22 22h-79c-7-13-1-23 9-23Z" />
+        <path className="guide-leaf" d="M190 129c19-14 35-9 39 3-7 16-24 23-39 20Z" />
+        <ellipse className="guide-skin" cx="111" cy="128" rx="29" ry="34" />
+        <path className="guide-hair" d="M80 132c-1-29 16-47 36-47 21 0 33 14 33 38-12-12-21-16-33-16-11 0-23 8-36 25Z" />
+        <path className="guide-neck" d="M99 153h25v28H99Z" />
+        <path className="guide-shawl" d="M69 193c14-22 35-31 55-30 23 1 42 17 51 44l-16 78H55Z" />
+        <path className="guide-tunic" d="M89 173c10 12 34 12 45 0 19 8 31 29 35 57l-12 95H63l-4-97c2-29 11-47 30-55Z" />
+        <path className="guide-skirt" d="M69 314h91l20 30H53Z" />
+        <path className="guide-arm" d="M151 188c28 5 39 27 39 61l-18 4c-3-28-9-39-28-43Z" />
+        <path className="guide-notebook" d="M168 223l38 8-8 52-38-8Z" />
+        <path className="guide-note-lines" d="m177 240 20 4m-23 10 20 4m-23 10 15 3" />
+        <circle className="guide-mark" cx="74" cy="279" r="5" />
+        <circle className="guide-mark" cx="91" cy="291" r="4" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg className="panel-guide-illustration guide-illustration-community" viewBox="0 0 240 360" aria-hidden="true">
+      <path className="guide-radiance" d="M38 80h35M51 53l28 22M46 108l31-18M167 43l-14 31M203 69l-32 13" />
+      <ellipse className="guide-skin" cx="115" cy="124" rx="29" ry="35" />
+      <path className="guide-hair" d="M82 130c-1-31 17-49 36-49 23 0 37 16 35 43-10-13-24-21-38-20-14 0-23 10-33 26Z" />
+      <path className="guide-neck" d="M101 151h26v28h-26Z" />
+      <path className="guide-scarf" d="M61 198c13-24 35-36 59-36 29 0 49 18 57 46l-18 88H53Z" />
+      <path className="guide-tunic" d="M82 178c11 13 40 14 53 0 20 8 32 30 34 62l-12 84H65l-7-85c2-29 10-51 24-61Z" />
+      <path className="guide-arm" d="M70 205c-19 10-27 30-27 58l18 2c2-23 8-35 23-41Z" />
+      <path className="guide-map" d="M46 238l75-18 42 17-75 18Z" />
+      <path className="guide-map-lines" d="m61 244 19 21m9-30 18 20m8-29 18 20m-61 1 60-14" />
+      <circle className="guide-node" cx="65" cy="250" r="5" />
+      <circle className="guide-node" cx="104" cy="241" r="5" />
+      <circle className="guide-node" cx="142" cy="238" r="5" />
+      <path className="guide-speech" d="M166 120c17-15 40-5 40 15 0 10-8 19-18 21l-12 12 2-14c-11-3-18-12-18-22 0-5 2-9 6-12Z" />
+      <path className="guide-speech-lines" d="m173 128 19 4m-20 8 16 3" />
+      <path className="guide-skirt" d="M64 314h94l20 30H45Z" />
+    </svg>
+  );
+}
+
 function focusPathways() {
   document.getElementById("pathways")?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -402,7 +446,7 @@ export default function Home() {
                 <img src={pathway.image} alt="" loading="lazy" className="panel-image" />
               )}
               <div className="panel-scrim" aria-hidden="true" />
-              <img src={pathway.guide.portrait} alt="" loading="lazy" className="panel-guide-portrait" aria-hidden="true" />
+              <img src={pathway.guide.portrait} alt="" loading={index > 6 ? "eager" : "lazy"} className="panel-guide-portrait" aria-hidden="true" />
               <button type="button" className="panel-button" onClick={() => openPathway(pathway)} aria-label={`Open ${pathway.title} conversation`}>
                 <div className="panel-topline">
                   <span className="panel-number">{pathway.number}</span>

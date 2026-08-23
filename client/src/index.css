@@ -176,7 +176,32 @@ button:focus-visible, a:focus-visible { outline: 2px solid #c4f25a; outline-offs
 .pathway-panel:hover, .pathway-panel:focus-within { transform: rotateY(0deg) rotateX(0deg) translateZ(36px) scale(1.012); box-shadow: -22px 34px 60px rgba(39, 24, 39, 0.28); filter: saturate(1.1); }
 .panel-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(0.96) brightness(1.04) contrast(1.01); transition: transform 560ms cubic-bezier(0.23, 1, 0.32, 1); }
 .panel-scrim { position: absolute; inset: 0; background: rgba(4, 18, 40, 0.14); pointer-events: none; }
-.panel-guide-portrait { position: absolute; z-index: 1; right: clamp(0.35rem, 2vw, 1.7rem); bottom: 0; width: min(31%, 14rem); height: 88%; object-fit: contain; object-position: right bottom; pointer-events: none; filter: drop-shadow(-0.6rem 0.85rem 0.8rem rgba(2, 10, 26, 0.33)); }
+.panel-guide-portrait { position: absolute; z-index: 1; right: clamp(0.35rem, 2vw, 1.7rem); bottom: 0; width: min(31%, 14rem); height: 88%; padding: 0.18rem 0.18rem 0; object-fit: contain; object-position: right bottom; pointer-events: none; background: rgba(244, 241, 232, 0.94); border-left: 1px solid rgba(207, 176, 106, 0.78); box-shadow: -0.7rem 0.95rem 1.15rem rgba(2, 10, 26, 0.34); }
+.panel-guide-illustration { position: absolute; z-index: 1; right: clamp(0.15rem, 1.5vw, 1.2rem); bottom: 0; width: min(34%, 15.5rem); height: 92%; overflow: visible; pointer-events: none; filter: drop-shadow(-0.6rem 0.85rem 0.8rem rgba(2, 10, 26, 0.33)); }
+.panel-guide-illustration .guide-skin { fill: #bf7d5e; }
+.panel-guide-illustration .guide-hair { fill: #18233b; }
+.panel-guide-illustration .guide-neck { fill: #a9624c; }
+.guide-illustration-resilience .guide-shawl { fill: #c64d54; }
+.guide-illustration-resilience .guide-tunic { fill: #264f6b; }
+.guide-illustration-resilience .guide-skirt { fill: #d5aa57; }
+.guide-illustration-resilience .guide-rain { fill: none; stroke: #9ed4e3; stroke-width: 6; stroke-linecap: round; opacity: 0.78; }
+.guide-illustration-resilience .guide-sun { fill: #e3bc61; }
+.guide-illustration-resilience .guide-cloud { fill: #9ab3bd; opacity: 0.88; }
+.guide-illustration-resilience .guide-leaf { fill: #b7cf6a; }
+.guide-illustration-resilience .guide-arm { fill: #a9624c; }
+.guide-illustration-resilience .guide-notebook { fill: #f1e5c2; stroke: #d5aa57; stroke-width: 3; }
+.guide-illustration-resilience .guide-note-lines { fill: none; stroke: #264f6b; stroke-width: 3; stroke-linecap: round; }
+.guide-illustration-resilience .guide-mark { fill: #e3bc61; }
+.guide-illustration-community .guide-scarf { fill: #d5aa57; }
+.guide-illustration-community .guide-tunic { fill: #82425f; }
+.guide-illustration-community .guide-skirt { fill: #295a7d; }
+.guide-illustration-community .guide-arm { fill: #a9624c; }
+.guide-illustration-community .guide-map { fill: #f1e5c2; stroke: #d5aa57; stroke-width: 3; }
+.guide-illustration-community .guide-map-lines { fill: none; stroke: #305c78; stroke-width: 3; stroke-linecap: round; }
+.guide-illustration-community .guide-node { fill: #c64d54; }
+.guide-illustration-community .guide-radiance { fill: none; stroke: #e3bc61; stroke-width: 5; stroke-linecap: round; }
+.guide-illustration-community .guide-speech { fill: #f1e5c2; stroke: #d5aa57; stroke-width: 3; }
+.guide-illustration-community .guide-speech-lines { fill: none; stroke: #82425f; stroke-width: 3; stroke-linecap: round; }
 .panel-button { position: relative; z-index: 2; display: flex; flex-direction: column; width: 100%; height: 100%; min-height: inherit; padding: 1.35rem 1.6rem; color: inherit; text-align: left; background: transparent; border: 1px solid rgba(244, 240, 230, 0.17); transition: border-color 200ms var(--ease-out, ease), background 200ms var(--ease-out, ease); }
 .panel-button::before { content: ""; position: absolute; top: 1.35rem; bottom: 1.35rem; left: 0; width: 3px; background: #c4f25a; transform: scaleY(0.32); transform-origin: bottom; transition: transform 220ms var(--ease-out, ease); }
 .panel-button:hover { border-color: #c4f25a; background: rgba(196, 242, 90, 0.08); }
@@ -313,6 +338,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid #c4f25a; outline-offs
   .pathway-panel, .panel-wide, .panel-tall, .panel-standard, .panel-feature, .pathway-panel:nth-child(3n), .pathway-panel:nth-child(4n), .pathway-panel:nth-child(5n), .pathway-panel:nth-child(9) { min-height: 15.5rem; }
   .panel-button { padding: 1.1rem; }
   .panel-guide-portrait { right: 0; width: 34%; height: 75%; opacity: 0.82; }
+  .panel-guide-illustration { right: -0.2rem; width: 36%; height: 80%; }
   .panel-body h3 { font-size: 2.3rem; }
   .principle-copy h2 { font-size: 3.9rem; }
   .conversation-layer { padding: 0; align-items: end; }

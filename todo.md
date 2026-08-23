@@ -111,3 +111,14 @@
 - [x] Diagnose why one or more named guide figure images are showing an image-generation failure state.
 - [x] Repair every broken guide figure reference using existing managed assets without new image generation.
 - [x] Validate all nine guide figures render in the landing page without invoking voice services.
+- [x] Remove the incorrect photographic portrait substitutions for Leela and Saira.
+- [x] Provide distinct reliable illustrated art figures for Leela and Saira without affecting guide voice controls.
+- [x] Verify the corrected Leela and Saira guide figures render as illustrations in their panels.
+- [x] Record runtime evidence that panels 08 and 09 render the new SVG guide illustrations without a failed-image placeholder.
+- [x] Confirm the Leela and Saira chat headers retain their title-adjacent Listen control without triggering audio synthesis.
+- [x] Map the user-supplied illustrated figures one-to-one to their matching nine pathway roles.
+- [x] Upload and integrate all nine user-supplied figures, replacing every prior guide-figure asset or vector substitute.
+- [x] Verify each supplied illustration renders in its matching pathway panel without changing chat or voice behavior.
+- [x] Blend the supplied white-backed illustrations into the pathway cards so they read as figures rather than opaque rectangles.
+- [x] Confirm an updated guide dock retains its title-adjacent Listen control without triggering synthesis after the all-nine illustration swap.
+- [x] Record final visual evidence that the supplied figures read as intentional framed art plates in the card composition.
