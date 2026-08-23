@@ -185,3 +185,6 @@
 - [x] Hide the native pointer on supported fine-pointer devices so the existing sphere is the sole visual cursor.
 - [x] Verify native-cursor hiding preserves touch, reduced-motion, and chat-dock cursor safeguards.
 - [x] Change the custom fine-pointer cursor sphere to the established royal-gold accent and verify its safeguards remain intact.
+- [x] Increase the royal-gold cursor sphere glow slightly for stronger contrast against dark sections.
+- [x] Add a subtle gold pulse to the cursor sphere when hovering pathway-entry controls without affecting reduced-motion users.
+- [x] Verify the enhanced cursor feedback and publish the update.

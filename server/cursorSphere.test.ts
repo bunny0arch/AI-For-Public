@@ -16,6 +16,8 @@ describe("cursor sphere substitution", () => {
     expect(styleSource).toContain(".site-shell .conversation-dock button:not(:disabled)");
     expect(styleSource).toContain(".cursor-sphere");
     expect(styleSource).toContain("background: #d2ad5e");
-    expect(styleSource).toContain("rgba(210, 173, 94, 0.64)");
+    expect(styleSource).toContain("rgba(210, 173, 94, 0.78)");
+    expect(styleSource).toContain(".site-shell:has(.hero-index-item:hover, .panel-button:hover) .cursor-sphere.is-visible:not(.is-popping)");
+    expect(styleSource).toContain("@keyframes cursor-sphere-pathway-pulse");
   });
 });

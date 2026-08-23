@@ -73,7 +73,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid #c4f25a; outline-offs
 
 .site-shell { --cursor-x: 50vw; --cursor-y: 50vh; overflow-x: clip; background: #f4f0e6; }
 
-.cursor-sphere { position: fixed; left: var(--cursor-x); top: var(--cursor-y); z-index: 80; width: 10px; height: 10px; pointer-events: none; opacity: 0; background: #d2ad5e; border-radius: 50%; box-shadow: 0 0 12px 2px rgba(210, 173, 94, 0.64); transform: translate(-50%, -50%) scale(0.72); transition: opacity 110ms var(--ease-out, ease), transform 110ms var(--ease-out, ease); }
+.cursor-sphere { position: fixed; left: var(--cursor-x); top: var(--cursor-y); z-index: 80; width: 10px; height: 10px; pointer-events: none; opacity: 0; background: #d2ad5e; border-radius: 50%; box-shadow: 0 0 16px 3px rgba(210, 173, 94, 0.78), 0 0 28px 5px rgba(210, 173, 94, 0.22); transform: translate(-50%, -50%) scale(0.72); transition: opacity 110ms var(--ease-out, ease), transform 110ms var(--ease-out, ease); }
 .cursor-sphere.is-visible { opacity: 0.94; transform: translate(-50%, -50%) scale(1); }
 .cursor-sphere.is-popping { animation: cursor-sphere-pop 220ms cubic-bezier(0.23, 1, 0.32, 1); }
 @keyframes cursor-sphere-pop {
@@ -85,6 +85,12 @@ button:focus-visible, a:focus-visible { outline: 2px solid #c4f25a; outline-offs
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .site-shell, .site-shell button:not(:disabled), .site-shell a[href] { cursor: none; }
   .site-shell .conversation-dock, .site-shell .conversation-dock *, .site-shell .conversation-dock button:not(:disabled), .site-shell .conversation-dock a[href] { cursor: auto; }
+  .site-shell:has(.hero-index-item:hover, .panel-button:hover) .cursor-sphere.is-visible:not(.is-popping) { animation: cursor-sphere-pathway-pulse 920ms cubic-bezier(0.45, 0, 0.55, 1) infinite; }
+}
+
+@keyframes cursor-sphere-pathway-pulse {
+  0%, 100% { opacity: 0.94; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.32); }
 }
 
 .hero-shell {
