@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { communityPathways } from "../shared/communityPathways";
-import { buildChatSystemPrompt, buildRouterSystemPrompt, CHAT_MODEL, detectDomainRoute, extractAssistantText, hasModelRouterCredentials, PATHWAY_IDS, ROUTING_MODEL } from "./chatConfig";
+import { buildChatSystemPrompt, buildRouterSystemPrompt, CHAT_MODEL, detectDomainRoute, extractAssistantText, hasModelRouterCredentials, isGuideLocalConversation, PATHWAY_IDS, ROUTING_MODEL } from "./chatConfig";
 
 describe("community chat configuration", () => {
   it("defines nine uniquely addressable community pathways", () => {
@@ -51,6 +51,13 @@ describe("community chat configuration", () => {
   it("uses the Open Field fallback when Manus-only model-routing credentials are unavailable", () => {
     expect(hasModelRouterCredentials({})).toBe(false);
     expect(hasModelRouterCredentials({ BUILT_IN_FORGE_API_URL: "https://forge.example", BUILT_IN_FORGE_API_KEY: "key" })).toBe(true);
+  });
+
+  it("keeps basic greetings with the guide the visitor selected", () => {
+    expect(isGuideLocalConversation("Hi")).toBe(true);
+    expect(isGuideLocalConversation("Hello farmer AI")).toBe(true);
+    expect(isGuideLocalConversation("What can you do?")).toBe(true);
+    expect(isGuideLocalConversation("What safety checks does my fishing boat need?")).toBe(false);
   });
 
   it("normalizes string and text-part model responses", () => {

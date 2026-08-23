@@ -1142,6 +1142,11 @@ function detectDomainRoute(message) {
   }
   return bestMatch?.id ?? null;
 }
+function isGuideLocalConversation(message) {
+  const normalized = message.toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
+  if (!normalized || normalized.split(" ").length > 10) return false;
+  return /^(hi|hello|hey|good morning|good afternoon|good evening)(\s+(there|guide|ai|assistant|farmer|friend|everyone|all))*$/.test(normalized) || /^(thanks|thank you|okay|ok|yes|no|help|can you help me|who are you|what can you do)$/.test(normalized);
+}
 function buildRouterSystemPrompt(activeCommunityId) {
   const active = getCommunityPathway(activeCommunityId);
   if (!active) throw new Error("Unknown community pathway");
@@ -1341,9 +1346,9 @@ var appRouter = router({
       if (!latestUserMessage) {
         throw new Error("Please enter a question before starting a conversation.");
       }
-      let targetId = detectDomainRoute(latestUserMessage.content);
+      let targetId = isGuideLocalConversation(latestUserMessage.content) ? input.communityId : detectDomainRoute(latestUserMessage.content);
       if (!targetId) {
-        targetId = "open-field";
+        targetId = input.communityId;
         if (hasModelRouterCredentials()) {
           try {
             const routing = await invokeLLM({
@@ -1375,11 +1380,11 @@ var appRouter = router({
               targetId = parsed.targetId;
             }
           } catch {
-            targetId = "open-field";
+            targetId = input.communityId;
           }
         }
       }
-      const resolvedTargetId = targetId ?? "open-field";
+      const resolvedTargetId = targetId ?? input.communityId;
       if (resolvedTargetId !== input.communityId) {
         const targetPathway = getCommunityPathway(resolvedTargetId) ?? getCommunityPathway("open-field");
         if (!targetPathway) throw new Error("No community pathway is available for this request.");

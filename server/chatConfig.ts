@@ -46,6 +46,14 @@ export function detectDomainRoute(message: string): string | null {
   return bestMatch?.id ?? null;
 }
 
+export function isGuideLocalConversation(message: string): boolean {
+  const normalized = message.toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
+  if (!normalized || normalized.split(" ").length > 10) return false;
+
+  return /^(hi|hello|hey|good morning|good afternoon|good evening)(\s+(there|guide|ai|assistant|farmer|friend|everyone|all))*$/.test(normalized)
+    || /^(thanks|thank you|okay|ok|yes|no|help|can you help me|who are you|what can you do)$/.test(normalized);
+}
+
 export function extractAssistantText(content: unknown): string {
   if (typeof content === "string") return content.trim();
   if (Array.isArray(content)) {

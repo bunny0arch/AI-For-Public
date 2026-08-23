@@ -4,7 +4,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { invokeLLM } from "./_core/llm";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
-import { PATHWAY_IDS, ROUTING_MODEL, buildChatSystemPrompt, buildRouterSystemPrompt, detectDomainRoute, hasModelRouterCredentials } from "./chatConfig";
+import { PATHWAY_IDS, ROUTING_MODEL, buildChatSystemPrompt, buildRouterSystemPrompt, detectDomainRoute, hasModelRouterCredentials, isGuideLocalConversation } from "./chatConfig";
 import { generateScopedResponse } from "./chatProviders";
 import { synthesizeGuideSpeech } from "./guideSpeech";
 import { getCommunityPathway } from "../shared/communityPathways";
@@ -44,10 +44,12 @@ export const appRouter = router({
           throw new Error("Please enter a question before starting a conversation.");
         }
 
-        let targetId = detectDomainRoute(latestUserMessage.content);
+        let targetId = isGuideLocalConversation(latestUserMessage.content)
+          ? input.communityId
+          : detectDomainRoute(latestUserMessage.content);
 
         if (!targetId) {
-          targetId = "open-field";
+          targetId = input.communityId;
 
           if (hasModelRouterCredentials()) {
             try {
@@ -81,14 +83,14 @@ export const appRouter = router({
                 targetId = parsed.targetId;
               }
             } catch {
-              // Vercel does not receive Manus-internal router credentials. Route
-              // ambiguous questions to the dedicated Open Field instead of failing.
-              targetId = "open-field";
+              // Vercel does not receive Manus-internal router credentials. Keep
+              // an ambiguous request with the guide the visitor explicitly chose.
+              targetId = input.communityId;
             }
           }
         }
 
-        const resolvedTargetId = targetId ?? "open-field";
+        const resolvedTargetId = targetId ?? input.communityId;
 
         if (resolvedTargetId !== input.communityId) {
           const targetPathway = getCommunityPathway(resolvedTargetId) ?? getCommunityPathway("open-field");
