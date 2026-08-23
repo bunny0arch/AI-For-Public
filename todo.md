@@ -108,3 +108,6 @@
 - [x] Validate voice playback for English, Hindi, and Telugu selections plus failure handling.
 - [x] Confirm a successful Hindi guide-voice response reaches active audio playback and the Stop state.
 - [x] Exercise a guide-voice failure path and confirm the retryable user-facing error message.
+- [x] Diagnose why one or more named guide figure images are showing an image-generation failure state.
+- [x] Repair every broken guide figure reference using existing managed assets without new image generation.
+- [x] Validate all nine guide figures render in the landing page without invoking voice services.
