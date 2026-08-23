@@ -142,6 +142,7 @@
 - [ ] Verify the deployed API artifact is self-contained and no longer resolves local `server/_core/*` imports at runtime.
 - [ ] Verify that Vercel executes the build-generated `api/[...path].js` artifact rather than an unbundled server entry.
 - [ ] Confirm the deployed API function starts successfully before re-testing managed media and tRPC routes.
+- [ ] Add explicit Vercel precedence for `/api/*` so static-output middleware cannot return the SPA 404 before the generated catch-all function runs.
 - [x] Move the Vercel adapter source outside `api/` so Vercel deploys the build-generated self-contained function rather than its unbundled TypeScript source.
 - [ ] Document the final live Vercel configuration only after the corrected deployment is confirmed.
 - [ ] Validate the repaired Vercel deployment and document the resolution.

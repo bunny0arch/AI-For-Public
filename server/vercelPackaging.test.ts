@@ -27,12 +27,16 @@ describe("Vercel packaging", () => {
     ).toBe(true);
   });
 
-  it("rewrites managed media only through the API adapter", () => {
+  it("routes API and managed media paths through the catch-all adapter", () => {
     const vercelConfig = JSON.parse(
       fs.readFileSync(path.join(projectRoot, "vercel.json"), "utf8"),
     ) as { rewrites?: Array<{ source: string; destination: string }> };
 
     expect(vercelConfig.rewrites).toEqual([
+      {
+        source: "/api/:path*",
+        destination: "/api/[...path]",
+      },
       {
         source: "/manus-storage/:path*",
         destination: "/api/manus-storage/:path*",
