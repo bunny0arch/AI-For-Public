@@ -271,6 +271,7 @@ export default function Home() {
     if (isGuideRedirecting) return;
 
     const context = selectedPathway ? summarizeHandoffContext(selectedPathway, messages) : null;
+    const carriedQuestion = [...messages].reverse().find((message) => message.role === "user")?.content;
     guideAudioRef.current?.pause();
     setIsGuideSpeaking(false);
     setLanguageMenuOpen(false);
@@ -285,6 +286,7 @@ export default function Home() {
       window.requestAnimationFrame(() => {
         setSelectedPathway(destination);
         setMessages([
+          ...(carriedQuestion ? [{ role: "user" as const, content: carriedQuestion }] : []),
           { role: "assistant", content: redirectMessage },
           { role: "assistant", content: destination.greeting },
         ]);
@@ -301,21 +303,14 @@ export default function Home() {
     const conversationMessages = nextMessages.filter(
       (message): message is { role: "user" | "assistant"; content: string } => message.role !== "system"
     );
-    const latestUserIndex = conversationMessages.length - 1;
-    const requestMessages = handoffContext && latestUserIndex >= 0
-      ? [
-          ...conversationMessages.slice(0, latestUserIndex).slice(-10),
-          { role: "assistant" as const, content: `Cross-guide context for continuity: ${handoffContext}` },
-          conversationMessages[latestUserIndex],
-        ]
-      : conversationMessages.slice(-11);
     const request = {
       communityId: selectedPathway.id,
       language,
-      messages: requestMessages,
+      messages: conversationMessages.slice(-12),
     };
     lastChatRequestRef.current = request;
     setChatError(null);
+    setHandoffContext(null);
     setMessages(nextMessages);
     chatMutation.mutate(request);
   }

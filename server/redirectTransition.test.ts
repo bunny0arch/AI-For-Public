@@ -17,7 +17,8 @@ describe("guide redirect handoff", () => {
     expect(homeSource).toContain("const REDIRECT_HANDOFF_MS = 250");
     expect(homeSource).toContain("setIsGuideRedirecting(true)");
     expect(homeSource).toContain("Switching to");
-    expect(homeSource).toContain("Cross-guide context for continuity");
+    expect(homeSource).toContain("carriedQuestion");
+    expect(homeSource).toContain("role: \"user\" as const, content: carriedQuestion");
     expect(unmountIndex).toBeGreaterThan(-1);
     expect(destinationIndex).toBeGreaterThan(unmountIndex);
     expect(homeSource).toContain("window.requestAnimationFrame(() => {");
