@@ -129,3 +129,8 @@
 - [x] Audit all implemented website, chat, voice, safety, accessibility, and deployment features for README documentation.
 - [x] Write a comprehensive README covering setup, architecture, feature behavior, validation, and project conventions.
 - [x] Review the README against the implementation and checkpoint the documentation update.
+- [x] Inspect the Vercel deployment status, runtime/build logs, and configuration without changing project behavior.
+- [x] Add a minimal Vercel Express entrypoint that reuses the existing routes and static-serving behavior without altering core chat functionality.
+- [x] Emit the Vite production client bundle into Vercel's `public/` directory so static assets and the SPA shell can be served by the platform.
+- [x] Identify and apply only the minimal necessary deployment compatibility fix.
+- [ ] Validate the repaired Vercel deployment and document the resolution.
