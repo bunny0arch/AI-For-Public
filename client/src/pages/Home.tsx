@@ -18,8 +18,10 @@ import {
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { toast } from "sonner";
 
-const markUrl = "/manus-storage/collective-mark_962f936b.png";
-const heroVideoUrl = "/manus-storage/glass-flower_89bde4e6.mp4";
+const publicMediaBase = "https://github.com/bunny0arch/AI-For-Public/releases/download/public-media-v1/";
+const markUrl = `${publicMediaBase}collective-mark.png`;
+const heroVideoUrl = `${publicMediaBase}glass-flower.mp4`;
+const fieldReferenceUrl = `${publicMediaBase}field-reference.jpg`;
 const AIChatBox = lazy(() => import("@/components/AIChatBox").then((module) => ({ default: module.AIChatBox })));
 
 function CursorSphere({ visible, popping }: { visible: boolean; popping: boolean }) {
@@ -328,7 +330,7 @@ export default function Home() {
             event.currentTarget.defaultPlaybackRate = 0.62;
             event.currentTarget.playbackRate = 0.62;
           }}
-          poster="/manus-storage/field-reference_86704408.jpg"
+          poster={fieldReferenceUrl}
           aria-hidden="true"
         >
           <source src={heroVideoUrl} type="video/mp4" />
@@ -471,7 +473,7 @@ export default function Home() {
 
       <section className="principle-section" aria-labelledby="principle-title">
         <div className="principle-image-wrap">
-          <img src="/manus-storage/field-reference_86704408.jpg" alt="Farm work at blue hour" loading="lazy" />
+          <img src={fieldReferenceUrl} alt="Farm work at blue hour" loading="lazy" />
         </div>
         <div className="principle-copy">
           <span className="section-marker">03 / A working principle</span>

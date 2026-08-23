@@ -880,6 +880,7 @@ var systemRouter = router({
 });
 
 // shared/communityPathways.ts
+var publicMediaBase = "https://github.com/bunny0arch/AI-For-Public/releases/download/public-media-v1/";
 var communityPathways = [
   {
     id: "farmers",
@@ -895,7 +896,7 @@ var communityPathways = [
       "Help me list the documents needed for farm support in my state."
     ],
     greeting: "I\u2019m Asha, your AI farm guide. I\u2019ll help you work through a safer next farm decision without replacing local expertise. Tell me your crop, district, and what you are seeing\u2014or ask in the language you use every day.",
-    image: "/manus-storage/field-reference_86704408.jpg",
+    image: `${publicMediaBase}field-reference.jpg`,
     guide: {
       name: "Asha",
       role: "Farm guide",
@@ -918,7 +919,7 @@ var communityPathways = [
       "How can I record catch and price information for a better selling decision?"
     ],
     greeting: "I\u2019m Vikram, your AI coast guide. Let\u2019s begin with safety and a clear plan\u2014tell me your coast, boat type, and what decision you need to make today.",
-    image: "/manus-storage/fishing-harbor-replacement_9d45fa9a.jpg",
+    image: `${publicMediaBase}fishing-harbor-replacement.jpg`,
     guide: {
       name: "Vikram",
       role: "Coast guide",
@@ -941,7 +942,7 @@ var communityPathways = [
       "Help me identify a small online market plan for my craft."
     ],
     greeting: "I\u2019m Meera, your AI craft guide. Your work already has a story\u2014tell me what you make, who you hope to reach, and the business question you want to solve.",
-    image: "/manus-storage/artisan-loom-replacement_c00969f9.jpg",
+    image: `${publicMediaBase}artisan-loom-replacement.jpg`,
     guide: {
       name: "Meera",
       role: "Craft guide",
@@ -964,7 +965,7 @@ var communityPathways = [
       "How can I compare two small business support options?"
     ],
     greeting: "I\u2019m Farah, your AI street-economy guide. Let\u2019s make your next business decision clearer\u2014what do you sell, and what are you deciding this week?",
-    image: "/manus-storage/panel-micro-entrepreneurs_623bd353.jpg",
+    image: `${publicMediaBase}panel-micro-entrepreneurs.jpg`,
     guide: {
       name: "Farah",
       role: "Street economy guide",
@@ -987,7 +988,7 @@ var communityPathways = [
       "Explain eligibility requirements in simple language."
     ],
     greeting: "I\u2019m Nandini, your AI public-service guide. I can help break a process into clear steps\u2014name the service and your state, and we\u2019ll start with what is known.",
-    image: "/manus-storage/panel-public-services-v2_072c4645.jpg",
+    image: `${publicMediaBase}panel-public-services-v2.jpg`,
     guide: {
       name: "Nandini",
       role: "Service guide",
@@ -1010,7 +1011,7 @@ var communityPathways = [
       "Can you simplify this instruction into short, clear steps?"
     ],
     greeting: "I\u2019m Kiran, your AI access guide. Tell me the task you want to make easier and any accessibility preference you would like me to respect. We can work one step at a time.",
-    image: "/manus-storage/panel-disabilities-v2_1430f14c.jpg",
+    image: `${publicMediaBase}panel-disabilities-v2.jpg`,
     guide: {
       name: "Kiran",
       role: "Access guide",
@@ -1033,7 +1034,7 @@ var communityPathways = [
       "What skills can I learn with a phone and two hours a day?"
     ],
     greeting: "I\u2019m Ravi, your AI learning guide. I can help you learn in small, useful steps\u2014what are you studying or hoping to learn next?",
-    image: "/manus-storage/panel-education-v2_3edfb89b.jpg",
+    image: `${publicMediaBase}panel-education-v2.jpg`,
     guide: {
       name: "Ravi",
       role: "Learning guide",
@@ -1056,7 +1057,7 @@ var communityPathways = [
       "Explain this weather alert in plain language."
     ],
     greeting: "I\u2019m Leela, your AI climate-readiness guide. Preparedness starts with clear information\u2014tell me what risk you are preparing for and what resources your household has available.",
-    image: "/manus-storage/panel-climate-v2_9ff79e61.jpg",
+    image: `${publicMediaBase}panel-climate-v2.jpg`,
     guide: {
       name: "Leela",
       role: "Resilience guide",
@@ -1079,7 +1080,7 @@ var communityPathways = [
       "Help me define a small, measurable public-good outcome."
     ],
     greeting: "I\u2019m Saira, your AI community guide. Tell me about the community you care about and the moment where information, access or confidence breaks down. We\u2019ll shape a useful starting point.",
-    image: "/manus-storage/panel-open-field-v2_d8f21b86.jpg",
+    image: `${publicMediaBase}panel-open-field-v2.jpg`,
     guide: {
       name: "Saira",
       role: "Community guide",

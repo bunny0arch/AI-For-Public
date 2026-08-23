@@ -144,6 +144,9 @@
 - [ ] Confirm the deployed API function starts successfully before re-testing managed media and tRPC routes.
 - [ ] Add explicit Vercel precedence for `/api/*` so static-output middleware cannot return the SPA 404 before the generated catch-all function runs.
 - [ ] Emit and route a dedicated generated `/api/manus-storage/[...path]` function so managed media does not depend on chained rewrites.
+- [x] Determine whether the existing hero and pathway visuals can be republished through deployment-compatible public asset URLs without exposing or transferring platform credentials.
+- [x] Publish only the approved existing hero, logo, and pathway visuals as public GitHub Release assets for Vercel delivery.
+- [x] Replace only Vercel-blocked managed-media references with the corresponding release asset URLs.
 - [x] Move the Vercel adapter source outside `api/` so Vercel deploys the build-generated self-contained function rather than its unbundled TypeScript source.
 - [ ] Document the final live Vercel configuration only after the corrected deployment is confirmed.
 - [ ] Validate the repaired Vercel deployment and document the resolution.
