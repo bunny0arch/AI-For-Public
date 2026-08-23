@@ -140,5 +140,8 @@
 - [ ] Correct the Vercel API adapter’s root-app import so it resolves the root server module rather than the `server/` directory at runtime.
 - [x] Bundle the Vercel API adapter during the deployment build so its existing local imports do not fail under Vercel’s native ESM function loader.
 - [ ] Verify the deployed API artifact is self-contained and no longer resolves local `server/_core/*` imports at runtime.
+- [ ] Verify that Vercel executes the build-generated `api/[...path].js` artifact rather than an unbundled server entry.
+- [ ] Confirm the deployed API function starts successfully before re-testing managed media and tRPC routes.
+- [x] Move the Vercel adapter source outside `api/` so Vercel deploys the build-generated self-contained function rather than its unbundled TypeScript source.
 - [ ] Document the final live Vercel configuration only after the corrected deployment is confirmed.
 - [ ] Validate the repaired Vercel deployment and document the resolution.
