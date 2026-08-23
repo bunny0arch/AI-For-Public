@@ -91,6 +91,17 @@ function isInsideConversation(target: EventTarget | null) {
   return target instanceof Element && Boolean(target.closest(".conversation-dock"));
 }
 
+function summarizeHandoffContext(source: CommunityPathway, conversation: Message[]): string | null {
+  const recentUserTopics = conversation
+    .filter((message) => message.role === "user")
+    .slice(-2)
+    .map((message) => message.content.trim())
+    .filter(Boolean);
+
+  if (recentUserTopics.length === 0) return null;
+  return `The visitor was previously speaking with ${source.guide.name} in ${source.title}. Relevant request: ${recentUserTopics.join(" / ")}`;
+}
+
 export default function Home() {
   const [selectedPathway, setSelectedPathway] = useState<CommunityPathway | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -101,6 +112,8 @@ export default function Home() {
   const [isGuideSpeaking, setIsGuideSpeaking] = useState(false);
   const [isConversationClosing, setIsConversationClosing] = useState(false);
   const [isGuideRedirecting, setIsGuideRedirecting] = useState(false);
+  const [redirectDestination, setRedirectDestination] = useState<CommunityPathway | null>(null);
+  const [handoffContext, setHandoffContext] = useState<string | null>(null);
   const [chatError, setChatError] = useState<string | null>(null);
   const siteRef = useRef<HTMLElement>(null);
   const dialogRef = useRef<HTMLElement>(null);
@@ -234,6 +247,8 @@ export default function Home() {
     setIsConversationClosing(false);
     setLanguageMenuOpen(false);
     setChatError(null);
+    setRedirectDestination(null);
+    setHandoffContext(null);
     setSelectedPathway(pathway);
     setMessages([{ role: "assistant", content: pathway.greeting }]);
   }
@@ -246,6 +261,8 @@ export default function Home() {
       closeTimerRef.current = window.setTimeout(() => {
         setSelectedPathway(null);
         setIsConversationClosing(false);
+        setRedirectDestination(null);
+        setHandoffContext(null);
       }, 260);
     }
   }
@@ -253,10 +270,13 @@ export default function Home() {
   function beginRedirectHandoff(destination: CommunityPathway, redirectMessage: string) {
     if (isGuideRedirecting) return;
 
+    const context = selectedPathway ? summarizeHandoffContext(selectedPathway, messages) : null;
     guideAudioRef.current?.pause();
     setIsGuideSpeaking(false);
     setLanguageMenuOpen(false);
     setChatError(null);
+    setRedirectDestination(destination);
+    setHandoffContext(context);
     setIsGuideRedirecting(true);
 
     if (redirectTimerRef.current) window.clearTimeout(redirectTimerRef.current);
@@ -281,10 +301,18 @@ export default function Home() {
     const conversationMessages = nextMessages.filter(
       (message): message is { role: "user" | "assistant"; content: string } => message.role !== "system"
     );
+    const latestUserIndex = conversationMessages.length - 1;
+    const requestMessages = handoffContext && latestUserIndex >= 0
+      ? [
+          ...conversationMessages.slice(0, latestUserIndex).slice(-10),
+          { role: "assistant" as const, content: `Cross-guide context for continuity: ${handoffContext}` },
+          conversationMessages[latestUserIndex],
+        ]
+      : conversationMessages.slice(-11);
     const request = {
       communityId: selectedPathway.id,
       language,
-      messages: conversationMessages,
+      messages: requestMessages,
     };
     lastChatRequestRef.current = request;
     setChatError(null);
@@ -538,6 +566,13 @@ export default function Home() {
         <div className={`conversation-layer ${isConversationClosing ? "is-closing" : ""} ${isGuideRedirecting ? "is-redirecting" : ""}`} role="presentation" onMouseDown={(event) => {
           if (event.target === event.currentTarget) closePathway();
         }}>
+          {isGuideRedirecting && redirectDestination && (
+            <div className="redirect-status" role="status" aria-live="polite">
+              <span>Switching to</span>
+              <strong>{redirectDestination.guide.name} · {redirectDestination.title}</strong>
+              {handoffContext && <em>Your question is being carried forward.</em>}
+            </div>
+          )}
           <section className="conversation-dock" ref={dialogRef} role="dialog" aria-modal="true" aria-busy={isGuideRedirecting} aria-label={dialogLabel} tabIndex={-1}>
             <div className="dock-header">
               <div>

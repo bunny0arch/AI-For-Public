@@ -243,6 +243,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid #c4f25a; outline-offs
 .conversation-dock { width: min(100%, 34rem); padding: 1.3rem; background: #1d131f; color: #f4f0e6; border: 1px solid rgba(244, 240, 230, 0.28); box-shadow: 0 22px 80px rgba(0, 0, 0, 0.38); animation: dock-left-in 280ms cubic-bezier(0.23, 1, 0.32, 1); }
 .conversation-layer.is-closing .conversation-dock { animation: dock-left-out 240ms cubic-bezier(0.23, 1, 0.32, 1) forwards; }
 .conversation-layer.is-redirecting .conversation-dock { pointer-events: none; animation: dock-guide-handoff-out 250ms cubic-bezier(0.77, 0, 0.175, 1) forwards; }
+.redirect-status { position: absolute; z-index: 1; top: 4.5rem; left: clamp(1.5rem, calc((100vw - 1320px) / 2), 4rem); display: grid; gap: 0.16rem; min-width: min(18rem, calc(100vw - 3rem)); padding: 0.56rem 0.75rem; color: var(--paper, #f4f0e6); background: rgba(6, 22, 47, 0.92); border: 1px solid rgba(207, 176, 106, 0.48); box-shadow: 0 14px 32px rgba(0, 0, 0, 0.22); font: 700 0.54rem/1.25 "Manrope", sans-serif; letter-spacing: 0.08em; text-transform: uppercase; animation: redirect-status-in 180ms cubic-bezier(0.23, 1, 0.32, 1) both; }
+.redirect-status span { color: var(--signal-gold-light, #e0c98e); }
+.redirect-status strong { font-size: 0.62rem; letter-spacing: 0.045em; }
+.redirect-status em { color: rgba(244, 240, 230, 0.68); font-size: 0.48rem; font-style: normal; letter-spacing: 0.055em; }
 .dock-header { display: flex; justify-content: space-between; gap: 1rem; padding-bottom: 1.1rem; border-bottom: 1px solid rgba(244, 240, 230, 0.18); }
 .dock-actions { display: flex; align-items: flex-start; gap: 0.55rem; }
 .dock-eyebrow { color: #c4f25a; font-size: 0.56rem; font-weight: 700; letter-spacing: 0.11em; text-transform: uppercase; }
@@ -283,6 +287,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid #c4f25a; outline-offs
 @keyframes dock-left-in { from { opacity: 0; transform: translateX(-1.6rem) scale(0.98); } to { opacity: 1; transform: translateX(0) scale(1); } }
 @keyframes dock-left-out { from { opacity: 1; transform: translateX(0) scale(1); } to { opacity: 0; transform: translateX(-1.1rem) scale(0.985); } }
 @keyframes dock-guide-handoff-out { from { opacity: 1; transform: translateX(0) scale(1); } to { opacity: 0; transform: translateX(-2.6rem) scale(0.97); } }
+@keyframes redirect-status-in { from { opacity: 0; transform: translateY(-0.45rem) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes dock-guide-handoff-out-mobile { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(1.1rem) scale(0.985); } }
 
 @media (max-width: 860px) {
   .masthead { grid-template-columns: 1fr auto; width: min(100% - 2rem, 1440px); }
@@ -345,6 +351,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid #c4f25a; outline-offs
   .principle-copy h2 { font-size: 3.9rem; }
   .conversation-layer { padding: 0; align-items: end; }
   .conversation-dock { width: 100%; max-height: 94svh; padding: 1rem; border-bottom: none; }
+  .conversation-layer.is-redirecting .conversation-dock { animation-name: dock-guide-handoff-out-mobile; animation-duration: 210ms; }
+  .redirect-status { top: max(0.8rem, env(safe-area-inset-top)); right: 1rem; left: 1rem; min-width: 0; }
   .dock-download span { display: none; }
   .dock-download { width: 2.3rem; justify-content: center; padding: 0; }
   .signal-chatbox { height: min(47svh, 410px) !important; }

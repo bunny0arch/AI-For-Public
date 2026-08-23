@@ -16,6 +16,8 @@ describe("guide redirect handoff", () => {
 
     expect(homeSource).toContain("const REDIRECT_HANDOFF_MS = 250");
     expect(homeSource).toContain("setIsGuideRedirecting(true)");
+    expect(homeSource).toContain("Switching to");
+    expect(homeSource).toContain("Cross-guide context for continuity");
     expect(unmountIndex).toBeGreaterThan(-1);
     expect(destinationIndex).toBeGreaterThan(unmountIndex);
     expect(homeSource).toContain("window.requestAnimationFrame(() => {");
@@ -29,5 +31,7 @@ describe("guide redirect handoff", () => {
 
     expect(styleSource).toContain(".conversation-layer.is-redirecting .conversation-dock");
     expect(styleSource).toContain("dock-guide-handoff-out");
+    expect(styleSource).toContain("dock-guide-handoff-out-mobile");
+    expect(styleSource).toContain(".redirect-status");
   });
 });
