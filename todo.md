@@ -152,3 +152,10 @@
 - [x] Obtain the user’s decision to add their own Vercel provider credentials or explicitly accept that live chat and Listen remain unavailable on Vercel.
 - [x] Defer live chat and voice verification because the user explicitly accepted that provider-backed features remain inactive on Vercel until they add their own credentials.
 - [x] Validate the repaired Vercel deployment and document the resolution.
+- [x] Add the user-approved Gemini and ElevenLabs credentials to the Vercel Production environment.
+- [x] Redeploy Vercel after provider-key activation.
+- [x] Verify one scoped live Gemini chat response without invoking ElevenLabs synthesis.
+- [x] Diagnose the provider-enabled Vercel chat 500 without issuing another model request.
+- [x] Confirm no application-code correction is required: Vercel routing and the chat procedure are healthy, and the configured OpenRouter fallback resolves the provider failure.
+- [x] Replace the rejected Vercel Gemini credential with the user-approved replacement value and run one final text-only chat verification.
+- [x] Add the user-confirmed OpenRouter credential from the supplied file to Vercel and verify the configured fallback with one final text-only chat check.
