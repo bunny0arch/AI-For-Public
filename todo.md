@@ -122,3 +122,7 @@
 - [x] Blend the supplied white-backed illustrations into the pathway cards so they read as figures rather than opaque rectangles.
 - [x] Confirm an updated guide dock retains its title-adjacent Listen control without triggering synthesis after the all-nine illustration swap.
 - [x] Record final visual evidence that the supplied figures read as intentional framed art plates in the card composition.
+- [x] Remove all nine guide-figure renderings from the pathway cards.
+- [x] Preserve guide names, panel imagery, and chat/voice behavior after removing the figures.
+- [x] Verify the figure-free pathway cards remain legible and visually balanced.
+- [x] Obtain an independent visual review of the figure-free pathway cards for readability and balance.

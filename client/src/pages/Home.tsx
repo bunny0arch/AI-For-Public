@@ -446,7 +446,6 @@ export default function Home() {
                 <img src={pathway.image} alt="" loading="lazy" className="panel-image" />
               )}
               <div className="panel-scrim" aria-hidden="true" />
-              <img src={pathway.guide.portrait} alt="" loading={index > 6 ? "eager" : "lazy"} className="panel-guide-portrait" aria-hidden="true" />
               <button type="button" className="panel-button" onClick={() => openPathway(pathway)} aria-label={`Open ${pathway.title} conversation`}>
                 <div className="panel-topline">
                   <span className="panel-number">{pathway.number}</span>
