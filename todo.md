@@ -136,5 +136,6 @@
 - [x] Add an explicit Vercel configuration that serves the built client from `public/` and directs API and managed-media requests to the existing Express app.
 - [ ] Verify the live Vercel root response renders the client shell rather than bundled server source.
 - [ ] Verify the live `/api/trpc` and `/manus-storage/*` paths reach the existing Express behavior under the corrected Vercel deployment.
+- [ ] Correct the Vercel rewrite order so managed media reaches the existing proxy instead of the SPA fallback.
 - [ ] Document the final live Vercel configuration only after the corrected deployment is confirmed.
 - [ ] Validate the repaired Vercel deployment and document the resolution.

@@ -8,10 +8,6 @@
     {
       "source": "/manus-storage/:path*",
       "destination": "/api/manus-storage/:path*"
-    },
-    {
-      "source": "/:path*",
-      "destination": "/index.html"
     }
   ]
 }
