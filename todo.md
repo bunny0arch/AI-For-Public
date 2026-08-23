@@ -60,3 +60,5 @@
 - [x] Replace chartreuse accents with a refined royal-navy, royal-red, and gold color system.
 - [x] Rebalance hero, Signal Index, pathway, and chat colors for professional contrast and restraint.
 - [x] Validate the revised color system across desktop and mobile viewports.
+- [x] Ensure the glass-flower hero video loops continuously while the page remains active.
+- [x] Validate continuous playback and the reduced-motion fallback at runtime.
