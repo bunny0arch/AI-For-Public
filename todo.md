@@ -133,4 +133,8 @@
 - [x] Add a minimal Vercel Express entrypoint that reuses the existing routes and static-serving behavior without altering core chat functionality.
 - [x] Emit the Vite production client bundle into Vercel's `public/` directory so static assets and the SPA shell can be served by the platform.
 - [x] Identify and apply only the minimal necessary deployment compatibility fix.
+- [x] Add an explicit Vercel configuration that serves the built client from `public/` and directs API and managed-media requests to the existing Express app.
+- [ ] Verify the live Vercel root response renders the client shell rather than bundled server source.
+- [ ] Verify the live `/api/trpc` and `/manus-storage/*` paths reach the existing Express behavior under the corrected Vercel deployment.
+- [ ] Document the final live Vercel configuration only after the corrected deployment is confirmed.
 - [ ] Validate the repaired Vercel deployment and document the resolution.
