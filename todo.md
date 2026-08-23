@@ -137,5 +137,6 @@
 - [ ] Verify the live Vercel root response renders the client shell rather than bundled server source.
 - [ ] Verify the live `/api/trpc` and `/manus-storage/*` paths reach the existing Express behavior under the corrected Vercel deployment.
 - [ ] Correct the Vercel rewrite order so managed media reaches the existing proxy instead of the SPA fallback.
+- [ ] Correct the Vercel API adapter’s root-app import so it resolves the root server module rather than the `server/` directory at runtime.
 - [ ] Document the final live Vercel configuration only after the corrected deployment is confirmed.
 - [ ] Validate the repaired Vercel deployment and document the resolution.

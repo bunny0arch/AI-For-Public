@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import app from "../server";
+import app from "../server.js";
 
 // Vercel routes its catch-all serverless function under /api. The application
 // itself already owns /api/trpc, while managed media arrives here through the
