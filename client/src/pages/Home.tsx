@@ -10,8 +10,6 @@ import {
   Languages,
   MoveDown,
   SendHorizonal,
-  Volume2,
-  VolumeX,
   X,
 } from "lucide-react";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
@@ -22,40 +20,9 @@ const heroVideoUrl = "/manus-storage/purple-desert_18154f41.mp4";
 const languageOptions = ["English", "हिन्दी", "తెలుగు"] as const;
 type ConversationLanguage = (typeof languageOptions)[number];
 const AIChatBox = lazy(() => import("@/components/AIChatBox").then((module) => ({ default: module.AIChatBox })));
-const signalOrbs = [
-  [18, "#c4f25a", 1.0, 8, 3.1, 26, 2], [25, "#ac86ff", 0.74, 66, 4.2, -36, 0], [21, "#ffd279", 0.82, 126, 3.6, 15, 1],
-  [30, "#78d9ff", 0.64, 182, 4.7, -24, 0], [16, "#ff9ecf", 0.78, 232, 2.9, 32, 2], [27, "#e4ff93", 0.56, 284, 4.4, -42, 0],
-  [23, "#e7b5ff", 0.68, 326, 3.8, 8, 1], [11, "#ffe6a6", 0.48, 42, 2.6, -16, 1], [34, "#a6f4cb", 0.52, 151, 5.1, 38, 2],
-] as const;
 
-function SignalParticles({ visible, merged }: { visible: boolean; merged: boolean }) {
-  return (
-    <div className={`signal-particle-field ${visible ? "is-visible" : ""} ${merged ? "is-merged" : ""}`} aria-hidden="true">
-      <span className="signal-core" />
-      {signalOrbs.map(([radius, color, scale, angle, duration, depth, layer], index) => (
-        <span
-          className={`signal-orb ${layer === 2 ? "is-front" : layer === 1 ? "is-middle" : "is-rear"}`}
-          key={`${radius}-${angle}`}
-          style={{
-            "--orb-radius": `${radius}px`,
-            "--orb-color": color,
-            "--orb-scale": scale,
-            "--start-rotation": `${angle}deg`,
-            "--end-rotation": `${angle + 360}deg`,
-            "--orb-duration": `${duration}s`,
-            "--orb-delay": `${index * -0.31}s`,
-            "--orb-z": `${depth}px`,
-            "--orb-layer": layer,
-            "--orb-tilt-x": `${layer ? 55 : -42}deg`,
-            "--orb-tilt-y": `${(index % 3) * 22 - 20}deg`,
-            "--merge-delay": `${index * 0.028}s`,
-          } as CSSProperties}
-        >
-          <span className="signal-orb-core" />
-        </span>
-      ))}
-    </div>
-  );
+function CursorSphere({ visible }: { visible: boolean }) {
+  return <span className={`cursor-sphere ${visible ? "is-visible" : ""}`} aria-hidden="true" />;
 }
 
 function focusPathways() {
@@ -67,13 +34,9 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [language, setLanguage] = useState<ConversationLanguage>("English");
   const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
-  const [signalVisible, setSignalVisible] = useState(false);
-  const [signalPulse, setSignalPulse] = useState(false);
-  const [fusionSoundEnabled, setFusionSoundEnabled] = useState(false);
+  const [cursorVisible, setCursorVisible] = useState(false);
   const siteRef = useRef<HTMLElement>(null);
-  const signalPulseTimer = useRef<number | null>(null);
   const dialogRef = useRef<HTMLElement>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
 
   const chatMutation = trpc.chat.respond.useMutation({
     onSuccess: (result) => {
@@ -122,17 +85,17 @@ export default function Home() {
     let pointerX = 0;
     let pointerY = 0;
     const updatePointer = () => {
-      siteRef.current?.style.setProperty("--signal-x", `${pointerX}px`);
-      siteRef.current?.style.setProperty("--signal-y", `${pointerY}px`);
+      siteRef.current?.style.setProperty("--cursor-x", `${pointerX}px`);
+      siteRef.current?.style.setProperty("--cursor-y", `${pointerY}px`);
       frame = 0;
     };
     const onMove = (event: PointerEvent) => {
       pointerX = event.clientX;
       pointerY = event.clientY;
-      setSignalVisible(true);
+      setCursorVisible(true);
       if (!frame) frame = window.requestAnimationFrame(updatePointer);
     };
-    const onLeave = () => setSignalVisible(false);
+    const onLeave = () => setCursorVisible(false);
 
     window.addEventListener("pointermove", onMove, { passive: true });
     document.documentElement.addEventListener("mouseleave", onLeave);
@@ -143,57 +106,8 @@ export default function Home() {
     };
   }, []);
 
-  useEffect(() => () => {
-    if (signalPulseTimer.current) window.clearTimeout(signalPulseTimer.current);
-  }, []);
-
-  useEffect(() => {
-    setFusionSoundEnabled(window.localStorage.getItem("collective-signal-fusion-sound") === "on");
-  }, []);
-
-  function playFusionSound(force = false) {
-    if (!fusionSoundEnabled && !force) return;
-
-    const AudioContextClass = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-    if (!AudioContextClass) return;
-    const context = audioContextRef.current ?? new AudioContextClass();
-    audioContextRef.current = context;
-    const now = context.currentTime;
-    const master = context.createGain();
-    master.gain.setValueAtTime(0.0001, now);
-    master.gain.exponentialRampToValueAtTime(0.075, now + 0.035);
-    master.gain.exponentialRampToValueAtTime(0.0001, now + 0.42);
-    master.connect(context.destination);
-
-    const low = context.createOscillator();
-    low.type = "sine";
-    low.frequency.setValueAtTime(155, now);
-    low.frequency.exponentialRampToValueAtTime(325, now + 0.26);
-    low.connect(master);
-
-    const high = context.createOscillator();
-    high.type = "triangle";
-    high.frequency.setValueAtTime(490, now + 0.06);
-    high.frequency.exponentialRampToValueAtTime(715, now + 0.27);
-    high.connect(master);
-
-    void context.resume();
-    low.start(now);
-    high.start(now + 0.06);
-    low.stop(now + 0.43);
-    high.stop(now + 0.34);
-  }
-
-  function pulseSignal() {
-    setSignalPulse(true);
-    playFusionSound();
-    if (signalPulseTimer.current) window.clearTimeout(signalPulseTimer.current);
-    signalPulseTimer.current = window.setTimeout(() => setSignalPulse(false), 620);
-  }
-
   function openPathway(pathway: CommunityPathway) {
     chatMutation.reset();
-    pulseSignal();
     setSelectedPathway(pathway);
     setMessages([{ role: "assistant", content: pathway.greeting }]);
   }
@@ -201,7 +115,6 @@ export default function Home() {
   function closePathway() {
     if (!chatMutation.isPending) {
       setSelectedPathway(null);
-      setSignalPulse(false);
     }
   }
 
@@ -224,15 +137,6 @@ export default function Home() {
     setLanguage(nextLanguage);
     setLanguageMenuOpen(false);
     toast.success(`Conversation language set to ${nextLanguage}.`);
-  }
-
-  function toggleFusionSound() {
-    setFusionSoundEnabled((enabled) => {
-      const next = !enabled;
-      window.localStorage.setItem("collective-signal-fusion-sound", next ? "on" : "off");
-      if (next) window.setTimeout(() => playFusionSound(true), 0);
-      return next;
-    });
   }
 
   function downloadConversation() {
@@ -260,12 +164,8 @@ export default function Home() {
   }
 
   return (
-    <main
-      className={`site-shell ${selectedPathway || signalPulse ? "signal-is-merged" : ""}`}
-      ref={siteRef}
-      onPointerDown={() => { if (!selectedPathway) pulseSignal(); }}
-    >
-      <SignalParticles visible={signalVisible} merged={Boolean(selectedPathway) || signalPulse} />
+    <main className="site-shell" ref={siteRef}>
+      <CursorSphere visible={cursorVisible} />
       <section className="hero-shell" aria-labelledby="hero-title">
         <video
           className="hero-video"
@@ -290,30 +190,18 @@ export default function Home() {
             <a href="#pathways">Pathways</a>
             <button type="button" onClick={focusPathways}>Start a conversation</button>
           </nav>
-          <div className="masthead-tools">
-            <div className="language-switcher">
-              <button className="language-control" type="button" onClick={() => setLanguageMenuOpen((open) => !open)} aria-expanded={languageMenuOpen} aria-controls="language-menu">
-                <Languages size={15} strokeWidth={1.7} />
-                <span>{language}</span>
-              </button>
-              <div className={`language-menu ${languageMenuOpen ? "is-open" : ""}`} id="language-menu" role="menu" aria-label="Choose conversation language">
-                {languageOptions.map((option) => (
-                  <button key={option} type="button" role="menuitem" onClick={() => selectLanguage(option)} className={language === option ? "is-selected" : ""}>
-                    {option}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <button
-              className={`sound-control ${fusionSoundEnabled ? "is-on" : ""}`}
-              type="button"
-              onClick={toggleFusionSound}
-              aria-pressed={fusionSoundEnabled}
-              aria-label={`Fusion sound ${fusionSoundEnabled ? "on" : "off"}`}
-            >
-              {fusionSoundEnabled ? <Volume2 size={14} strokeWidth={1.65} /> : <VolumeX size={14} strokeWidth={1.65} />}
-              <span>Fusion sound</span>
+          <div className="language-switcher">
+            <button className="language-control" type="button" onClick={() => setLanguageMenuOpen((open) => !open)} aria-expanded={languageMenuOpen} aria-controls="language-menu">
+              <Languages size={15} strokeWidth={1.7} />
+              <span>{language}</span>
             </button>
+            <div className={`language-menu ${languageMenuOpen ? "is-open" : ""}`} id="language-menu" role="menu" aria-label="Choose conversation language">
+              {languageOptions.map((option) => (
+                <button key={option} type="button" role="menuitem" onClick={() => selectLanguage(option)} className={language === option ? "is-selected" : ""}>
+                  {option}
+                </button>
+              ))}
+            </div>
           </div>
         </header>
 

@@ -42,3 +42,6 @@
 - [x] Correct the desktop hero vertical composition so its initiative line and headline retain clear separation from the masthead at shorter viewports.
 - [x] Remove the heavy chat-rendering dependency path that causes production builds to exceed the available memory budget, while preserving readable conversation output.
 - [x] Add a distinct middle-depth particle plane between the existing front and rear orbital layers, then revalidate normal and reduced motion behavior.
+- [x] Remove all colored orbital particles, convergence behavior, and fusion effects from the cursor interaction.
+- [x] Add one small white sphere whose center follows the pointer precisely on fine-pointer devices.
+- [x] Validate the simplified cursor sphere and its reduced-motion suppression.
