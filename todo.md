@@ -184,3 +184,4 @@
 - [x] Document the completed full-site QA pass and publish any necessary corrections.
 - [x] Hide the native pointer on supported fine-pointer devices so the existing sphere is the sole visual cursor.
 - [x] Verify native-cursor hiding preserves touch, reduced-motion, and chat-dock cursor safeguards.
+- [x] Change the custom fine-pointer cursor sphere to the established royal-gold accent and verify its safeguards remain intact.

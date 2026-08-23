@@ -15,5 +15,7 @@ describe("cursor sphere substitution", () => {
     expect(styleSource).toContain(".site-shell, .site-shell button:not(:disabled), .site-shell a[href] { cursor: none; }");
     expect(styleSource).toContain(".site-shell .conversation-dock button:not(:disabled)");
     expect(styleSource).toContain(".cursor-sphere");
+    expect(styleSource).toContain("background: #d2ad5e");
+    expect(styleSource).toContain("rgba(210, 173, 94, 0.64)");
   });
 });
