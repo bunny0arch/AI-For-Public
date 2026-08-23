@@ -118,6 +118,19 @@ button:focus-visible, a:focus-visible { outline: 2px solid #c4f25a; outline-offs
 .hero-action:hover { background: #d8ff82; transform: translateY(-2px); }
 .hero-action:active { transform: scale(0.97); }
 
+.hero-signal-index { position: absolute; top: 7.25rem; right: clamp(1.5rem, 5vw, 7rem); z-index: 2; width: clamp(15rem, 21vw, 19rem); padding-left: 1rem; border-left: 1px solid rgba(244, 240, 230, 0.35); }
+.hero-index-heading { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 0.55rem; color: rgba(244, 240, 230, 0.55); font-size: 0.54rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+.hero-index-heading span:first-child { color: #c4f25a; }
+.hero-index-list { display: grid; }
+.hero-index-item { display: grid; grid-template-columns: 1.45rem minmax(0, 1fr) auto; align-items: center; gap: 0.55rem; min-height: 2.38rem; padding: 0.28rem 0; color: rgba(244, 240, 230, 0.82); text-align: left; background: transparent; border: 0; border-bottom: 1px solid rgba(244, 240, 230, 0.16); font-family: "Manrope", sans-serif; transition: color 160ms var(--ease-out, ease), padding 160ms var(--ease-out, ease), background 160ms var(--ease-out, ease); }
+.hero-index-item:first-child { border-top: 1px solid rgba(244, 240, 230, 0.16); }
+.hero-index-item:hover { padding-left: 0.42rem; color: #1d131f; background: #c4f25a; }
+.hero-index-number { color: #c4f25a; font: 400 1.15rem/1 "DM Serif Display", Georgia, serif; letter-spacing: -0.06em; }
+.hero-index-item:hover .hero-index-number { color: #1d131f; }
+.hero-index-title { overflow: hidden; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.045em; text-overflow: ellipsis; white-space: nowrap; }
+.hero-index-item svg { opacity: 0.7; transition: transform 160ms var(--ease-out, ease); }
+.hero-index-item:hover svg { transform: translateX(3px); }
+
 .signal-dial { position: absolute; right: clamp(1.5rem, 5vw, 7rem); bottom: clamp(4.5rem, 11vh, 8rem); display: grid; place-items: center; width: 9.2rem; height: 9.2rem; color: #f4f0e6; background: rgba(22, 13, 27, 0.38); border: 1px solid rgba(244, 240, 230, 0.55); border-radius: 50%; overflow: hidden; transition: transform 220ms var(--ease-out, ease), background 220ms var(--ease-out, ease); }
 .signal-dial:hover { transform: rotate(-8deg) scale(1.03); background: rgba(22, 13, 27, 0.65); }
 .dial-ring { position: absolute; inset: 0.56rem; border: 1px dashed rgba(196, 242, 90, 0.75); border-radius: 50%; }
@@ -126,6 +139,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid #c4f25a; outline-offs
 .dial-arrow { position: absolute; right: 0.85rem; bottom: 0.95rem; }
 .hero-footnote { position: absolute; display: flex; align-items: center; gap: 0.65rem; bottom: 1.55rem; left: 50%; transform: translateX(-50%); width: max-content; color: rgba(244, 240, 230, 0.64); font-size: 0.57rem; text-transform: uppercase; letter-spacing: 0.11em; }
 .footnote-dot { display: block; width: 0.24rem; height: 0.24rem; background: #c4f25a; border-radius: 50%; }
+.hero-content, .hero-footnote, .signal-dial { transition: opacity 240ms cubic-bezier(0.23, 1, 0.32, 1), transform 240ms cubic-bezier(0.23, 1, 0.32, 1); }
+.site-shell.is-conversation-active .hero-content { opacity: 0; pointer-events: none; transform: translateX(-1.25rem); }
+.site-shell.is-conversation-active .hero-footnote { opacity: 0; pointer-events: none; transform: translate(-50%, 0.75rem); }
+.site-shell.is-conversation-active .signal-dial { opacity: 0; pointer-events: none; transform: translateY(1rem) scale(0.94); }
 
 .mission-section { display: grid; grid-template-columns: 1.2fr 5fr 1.8fr; gap: clamp(2rem, 6vw, 7rem); padding: clamp(5.5rem, 10vw, 10rem) max(1.5rem, calc((100vw - 1320px) / 2)); background: #ece6d9; color: #251b23; }
 .section-marker { align-self: start; color: #6f6570; font-size: 0.63rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
@@ -187,8 +204,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid #c4f25a; outline-offs
 .site-footer p { margin: 0; color: rgba(244, 240, 230, 0.56); font: 400 1.2rem/1 "DM Serif Display", Georgia, serif; }
 .site-footer button { justify-self: end; display: inline-flex; align-items: center; gap: 0.5rem; color: #c4f25a; background: none; border: none; font: 700 0.61rem/1 "Manrope", sans-serif; letter-spacing: 0.08em; text-transform: uppercase; }
 
-.conversation-layer { position: fixed; inset: 0; z-index: 50; display: flex; align-items: end; justify-content: end; padding: clamp(0.75rem, 2vw, 1.5rem); background: rgba(10, 6, 11, 0.58); backdrop-filter: blur(7px); }
-.conversation-dock { width: min(100%, 34rem); padding: 1.3rem; background: #1d131f; color: #f4f0e6; border: 1px solid rgba(244, 240, 230, 0.28); box-shadow: 0 22px 80px rgba(0, 0, 0, 0.38); animation: dock-in 240ms cubic-bezier(0.23, 1, 0.32, 1); }
+.conversation-layer { position: fixed; inset: 0; z-index: 50; display: flex; align-items: flex-start; justify-content: flex-start; padding: 6.5rem clamp(1.5rem, calc((100vw - 1320px) / 2), 4rem) 1.5rem; background: transparent; }
+.conversation-layer.is-closing { pointer-events: none; }
+.conversation-dock { width: min(100%, 34rem); padding: 1.3rem; background: #1d131f; color: #f4f0e6; border: 1px solid rgba(244, 240, 230, 0.28); box-shadow: 0 22px 80px rgba(0, 0, 0, 0.38); animation: dock-left-in 280ms cubic-bezier(0.23, 1, 0.32, 1); }
+.conversation-layer.is-closing .conversation-dock { animation: dock-left-out 240ms cubic-bezier(0.23, 1, 0.32, 1) forwards; }
 .dock-header { display: flex; justify-content: space-between; gap: 1rem; padding-bottom: 1.1rem; border-bottom: 1px solid rgba(244, 240, 230, 0.18); }
 .dock-actions { display: flex; align-items: flex-start; gap: 0.55rem; }
 .dock-eyebrow { color: #c4f25a; font-size: 0.56rem; font-weight: 700; letter-spacing: 0.11em; text-transform: uppercase; }
@@ -222,7 +241,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid #c4f25a; outline-offs
 .animation-delay-4 { animation-delay: 270ms; }
 
 @keyframes rise-in { to { opacity: 1; transform: translateY(0); } }
-@keyframes dock-in { from { opacity: 0; transform: translateY(18px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes dock-left-in { from { opacity: 0; transform: translateX(-1.6rem) scale(0.98); } to { opacity: 1; transform: translateX(0) scale(1); } }
+@keyframes dock-left-out { from { opacity: 1; transform: translateX(0) scale(1); } to { opacity: 0; transform: translateX(-1.1rem) scale(0.985); } }
 
 @media (max-width: 860px) {
   .masthead { grid-template-columns: 1fr auto; width: min(100% - 2rem, 1440px); }
@@ -232,7 +252,16 @@ button:focus-visible, a:focus-visible { outline: 2px solid #c4f25a; outline-offs
   .hero-content { width: min(100% - 2rem, 1440px); padding-right: 0; padding-bottom: 8.5rem; }
   .hero-title { font-size: clamp(3.6rem, 15vw, 6.6rem); }
   .hero-bottom { align-items: start; flex-direction: column; gap: 1.55rem; }
-  .signal-dial { right: 1.15rem; bottom: 5.3rem; width: 7.4rem; height: 7.4rem; }
+  .hero-signal-index { top: auto; right: 1rem; bottom: 2.95rem; left: 1rem; width: auto; padding: 0.42rem 0 0; border-top: 1px solid rgba(244, 240, 230, 0.3); border-left: 0; overflow: hidden; }
+  .hero-index-heading { display: none; }
+  .hero-index-list { display: flex; gap: 0.42rem; overflow-x: auto; padding-bottom: 0.15rem; scrollbar-width: none; }
+  .hero-index-list::-webkit-scrollbar { display: none; }
+  .hero-index-item { display: inline-flex; flex: 0 0 auto; gap: 0.38rem; min-height: 1.9rem; padding: 0 0.52rem; border: 1px solid rgba(244, 240, 230, 0.28); background: rgba(19, 10, 21, 0.44); }
+  .hero-index-item:first-child { border-top: 1px solid rgba(244, 240, 230, 0.28); }
+  .hero-index-number { font-size: 0.95rem; }
+  .hero-index-title { max-width: 8.7rem; font-size: 0.56rem; }
+  .hero-index-item svg { display: none; }
+  .signal-dial { display: none; }
   .dial-count { font-size: 2.55rem; }
   .hero-footnote { left: 1rem; right: 1rem; width: auto; justify-content: center; transform: none; font-size: 0.48rem; }
   .mission-section { grid-template-columns: 1fr; gap: 2rem; padding-inline: 1.5rem; }
@@ -258,7 +287,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid #c4f25a; outline-offs
   .hero-title { font-size: clamp(3.35rem, 16.5vw, 4.9rem); }
   .hero-bottom p { max-width: 18rem; font-size: 0.78rem; }
   .hero-action { padding: 0.75rem 0.9rem 0.75rem 1rem; }
-  .signal-dial { bottom: 4.8rem; right: 1rem; width: 6.65rem; height: 6.65rem; }
+  .hero-signal-index { bottom: 2.7rem; }
   .dial-ring { inset: 0.42rem; }
   .dial-label { margin-top: 0.85rem; font-size: 0.48rem; }
   .dial-count { margin-bottom: -0.1rem; font-size: 2.25rem; }

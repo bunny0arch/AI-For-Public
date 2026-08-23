@@ -45,3 +45,12 @@
 - [x] Remove all colored orbital particles, convergence behavior, and fusion effects from the cursor interaction.
 - [x] Add one small white sphere whose center follows the pointer precisely on fine-pointer devices.
 - [x] Validate the simplified cursor sphere and its reduced-motion suppression.
+- [x] Add an immediate-access Signal Index on the right side of the hero for all nine scoped conversations.
+- [x] Keep the hero hierarchy editorial and non-dashboard-like while making every pathway directly actionable on first load.
+- [x] Provide a compact mobile interaction pattern that exposes all nine pathways without forcing a long search through the page.
+- [x] Validate direct hero-side access for all pathway controls across desktop and mobile layouts.
+- [x] Move an opened hero-side conversation into a focused left takeover panel.
+- [x] Fade the original hero editorial context away while the focused chat is open, then restore it on close.
+- [x] Validate the reversible open/close transition on desktop and mobile layouts.
+- [x] Exercise all nine hero Signal Index buttons on desktop and verify each opens the matching scoped conversation.
+- [x] Exercise the mobile hero Signal Index rail across all nine pathways, including horizontal access and correct conversation opening for each item.

@@ -35,8 +35,10 @@ export default function Home() {
   const [language, setLanguage] = useState<ConversationLanguage>("English");
   const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
   const [cursorVisible, setCursorVisible] = useState(false);
+  const [isConversationClosing, setIsConversationClosing] = useState(false);
   const siteRef = useRef<HTMLElement>(null);
   const dialogRef = useRef<HTMLElement>(null);
+  const closeTimerRef = useRef<number | null>(null);
 
   const chatMutation = trpc.chat.respond.useMutation({
     onSuccess: (result) => {
@@ -70,11 +72,15 @@ export default function Home() {
   );
 
   useEffect(() => {
-    if (selectedPathway) {
+    if (selectedPathway && !isConversationClosing) {
       const timer = window.setTimeout(() => dialogRef.current?.focus(), 80);
       return () => window.clearTimeout(timer);
     }
-  }, [selectedPathway]);
+  }, [selectedPathway, isConversationClosing]);
+
+  useEffect(() => () => {
+    if (closeTimerRef.current) window.clearTimeout(closeTimerRef.current);
+  }, []);
 
   useEffect(() => {
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
@@ -108,13 +114,19 @@ export default function Home() {
 
   function openPathway(pathway: CommunityPathway) {
     chatMutation.reset();
+    if (closeTimerRef.current) window.clearTimeout(closeTimerRef.current);
+    setIsConversationClosing(false);
     setSelectedPathway(pathway);
     setMessages([{ role: "assistant", content: pathway.greeting }]);
   }
 
   function closePathway() {
     if (!chatMutation.isPending) {
-      setSelectedPathway(null);
+      setIsConversationClosing(true);
+      closeTimerRef.current = window.setTimeout(() => {
+        setSelectedPathway(null);
+        setIsConversationClosing(false);
+      }, 260);
     }
   }
 
@@ -164,7 +176,7 @@ export default function Home() {
   }
 
   return (
-    <main className="site-shell" ref={siteRef}>
+    <main className={`site-shell ${selectedPathway && !isConversationClosing ? "is-conversation-active" : ""}`} ref={siteRef}>
       <CursorSphere visible={cursorVisible} />
       <section className="hero-shell" aria-labelledby="hero-title">
         <video
@@ -226,6 +238,28 @@ export default function Home() {
             </button>
           </div>
         </div>
+
+        <aside className="hero-signal-index animation-rise animation-delay-3" aria-label="Immediate community conversation access">
+          <div className="hero-index-heading">
+            <span>Signal index</span>
+            <span>09 pathways</span>
+          </div>
+          <nav className="hero-index-list" aria-label="Open a community conversation">
+            {communityPathways.map((pathway) => (
+              <button
+                key={pathway.id}
+                type="button"
+                className="hero-index-item"
+                onClick={() => openPathway(pathway)}
+                aria-label={`Open ${pathway.title} conversation`}
+              >
+                <span className="hero-index-number">{pathway.number}</span>
+                <span className="hero-index-title">{pathway.title}</span>
+                <ArrowRight size={14} strokeWidth={1.6} />
+              </button>
+            ))}
+          </nav>
+        </aside>
 
         <button className="signal-dial animation-rise animation-delay-4" type="button" onClick={focusPathways} aria-label="Explore nine community pathways">
           <span className="dial-ring" />
@@ -325,7 +359,7 @@ export default function Home() {
       </footer>
 
       {selectedPathway && (
-        <div className="conversation-layer" role="presentation" onMouseDown={(event) => {
+        <div className={`conversation-layer ${isConversationClosing ? "is-closing" : ""}`} role="presentation" onMouseDown={(event) => {
           if (event.target === event.currentTarget) closePathway();
         }}>
           <section className="conversation-dock" ref={dialogRef} role="dialog" aria-modal="true" aria-label={dialogLabel} tabIndex={-1}>
