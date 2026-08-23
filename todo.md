@@ -163,6 +163,6 @@
 - [x] Add an in-chat loading indicator with accessible status messaging during a response request.
 - [x] Add clear retryable chat error feedback that retains the user’s draft and works across all scoped pathways.
 - [x] Verify one live text-only chat response and the enhanced loading/error states after deployment.
-- [ ] Keep greetings and basic conversational messages with the currently selected community guide.
-- [ ] Preserve deterministic redirects only for messages that clearly belong to another designated pathway.
-- [ ] Verify a live greeting remains in the selected guide chat after the routing refinement.
+- [x] Keep greetings and basic conversational messages with the currently selected community guide.
+- [x] Preserve deterministic redirects only for messages that clearly belong to another designated pathway.
+- [x] Verify a live greeting remains in the selected guide chat after the routing refinement.
