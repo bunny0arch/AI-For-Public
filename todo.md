@@ -134,19 +134,21 @@
 - [x] Emit the Vite production client bundle into Vercel's `public/` directory so static assets and the SPA shell can be served by the platform.
 - [x] Identify and apply only the minimal necessary deployment compatibility fix.
 - [x] Add an explicit Vercel configuration that serves the built client from `public/` and directs API and managed-media requests to the existing Express app.
-- [ ] Verify the live Vercel root response renders the client shell rather than bundled server source.
-- [ ] Verify the live `/api/trpc` and `/manus-storage/*` paths reach the existing Express behavior under the corrected Vercel deployment.
-- [ ] Correct the Vercel rewrite order so managed media reaches the existing proxy instead of the SPA fallback.
-- [ ] Correct the Vercel API adapter’s root-app import so it resolves the root server module rather than the `server/` directory at runtime.
+- [x] Verify the live Vercel root response renders the client shell rather than bundled server source.
+- [x] Verify the live `/api/trpc` and `/manus-storage/*` paths reach the existing Express behavior under the corrected Vercel deployment.
+- [x] Correct the Vercel rewrite order so managed media reaches the existing proxy instead of the SPA fallback.
+- [x] Correct the Vercel API adapter’s root-app import so it resolves the root server module rather than the `server/` directory at runtime.
 - [x] Bundle the Vercel API adapter during the deployment build so its existing local imports do not fail under Vercel’s native ESM function loader.
-- [ ] Verify the deployed API artifact is self-contained and no longer resolves local `server/_core/*` imports at runtime.
-- [ ] Verify that Vercel executes the build-generated `api/[...path].js` artifact rather than an unbundled server entry.
-- [ ] Confirm the deployed API function starts successfully before re-testing managed media and tRPC routes.
-- [ ] Add explicit Vercel precedence for `/api/*` so static-output middleware cannot return the SPA 404 before the generated catch-all function runs.
-- [ ] Emit and route a dedicated generated `/api/manus-storage/[...path]` function so managed media does not depend on chained rewrites.
+- [x] Verify the deployed API artifact is self-contained and no longer resolves local `server/_core/*` imports at runtime.
+- [x] Verify that Vercel executes the build-generated `api/[...path].js` artifact rather than an unbundled server entry.
+- [x] Confirm the deployed API function starts successfully before re-testing managed media and tRPC routes.
+- [x] Add explicit Vercel precedence for `/api/*` so static-output middleware cannot return the SPA 404 before the generated catch-all function runs.
+- [x] Emit and route a dedicated generated `/api/manus-storage/[...path]` function so managed media does not depend on chained rewrites.
 - [x] Determine whether the existing hero and pathway visuals can be republished through deployment-compatible public asset URLs without exposing or transferring platform credentials.
 - [x] Publish only the approved existing hero, logo, and pathway visuals as public GitHub Release assets for Vercel delivery.
 - [x] Replace only Vercel-blocked managed-media references with the corresponding release asset URLs.
 - [x] Move the Vercel adapter source outside `api/` so Vercel deploys the build-generated self-contained function rather than its unbundled TypeScript source.
-- [ ] Document the final live Vercel configuration only after the corrected deployment is confirmed.
-- [ ] Validate the repaired Vercel deployment and document the resolution.
+- [x] Document the final live Vercel configuration only after the corrected deployment is confirmed.
+- [x] Obtain the user’s decision to add their own Vercel provider credentials or explicitly accept that live chat and Listen remain unavailable on Vercel.
+- [x] Defer live chat and voice verification because the user explicitly accepted that provider-backed features remain inactive on Vercel until they add their own credentials.
+- [x] Validate the repaired Vercel deployment and document the resolution.
