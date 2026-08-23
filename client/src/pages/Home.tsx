@@ -25,6 +25,16 @@ function CursorSphere({ visible }: { visible: boolean }) {
   return <span className={`cursor-sphere ${visible ? "is-visible" : ""}`} aria-hidden="true" />;
 }
 
+function SignalSculpture({ tone, className }: { tone: "navy" | "gold" | "red"; className: string }) {
+  return (
+    <div className={`signal-sculpture signal-sculpture-${tone} ${className}`} aria-hidden="true">
+      <span className="sculpture-top" />
+      <span className="sculpture-front" />
+      <span className="sculpture-side" />
+    </div>
+  );
+}
+
 function focusPathways() {
   document.getElementById("pathways")?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -275,6 +285,7 @@ export default function Home() {
           <AudioLines size={20} strokeWidth={1.45} />
           <p>Begin with a question from the field. Leave with a next action you can verify.</p>
         </div>
+        <SignalSculpture tone="gold" className="mission-sculpture" />
       </section>
 
       <section className="pathways-section" id="pathways" aria-labelledby="pathways-title">
@@ -287,6 +298,9 @@ export default function Home() {
             Nine focused entry points for better questions, clearer context and practical next moves.
           </p>
         </div>
+
+        <SignalSculpture tone="navy" className="pathway-sculpture pathway-sculpture-left" />
+        <SignalSculpture tone="red" className="pathway-sculpture pathway-sculpture-right" />
 
         <div className="community-grid" role="list" aria-label="Community AI pathways">
           {communityPathways.map((pathway, index) => (

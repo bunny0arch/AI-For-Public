@@ -66,3 +66,7 @@
 - [x] Ensure the stack layers forward cleanly and unwinds in reverse when scrolling back to earlier pathways.
 - [x] Remove the masthead language control and place the language selector inside the focused chat dock.
 - [x] Validate desktop/mobile stack flow, reverse unwind, and chat-local language selection.
+- [x] Ensure panel 09 fully settles above panel 08 before the pathway section yields to the following content.
+- [x] Validate the corrected final-card handoff in forward and reverse scrolling directions.
+- [x] Add restrained royal-navy, gold, and red sculptural 3D-style accents to the light editorial spaces.
+- [x] Validate the new decorative objects across desktop, mobile, and reduced-motion modes.

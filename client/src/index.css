@@ -421,7 +421,7 @@ button:focus-visible, a:focus-visible { outline-color: var(--signal-gold-light);
 .pathway-panel:nth-child(9) {
   position: sticky;
   top: calc(1.25rem + (var(--panel-index) * 0.36rem));
-  width: min(100%, 68rem);
+  width: min(100%, 64rem);
   min-height: clamp(20rem, 48vh, 28rem);
   margin: 0 auto clamp(14rem, 31vh, 23rem);
   transform: none;
@@ -431,6 +431,11 @@ button:focus-visible, a:focus-visible { outline-color: var(--signal-gold-light);
 }
 
 .pathway-panel:last-child { margin-bottom: 0; }
+.community-grid::after {
+  content: "";
+  display: block;
+  height: clamp(28rem, 72vh, 46rem);
+}
 .pathway-panel:hover,
 .pathway-panel:focus-within {
   transform: none;
@@ -487,6 +492,7 @@ button:focus-visible, a:focus-visible { outline-color: var(--signal-gold-light);
     box-shadow: 0 16px 38px rgba(4, 20, 44, 0.23);
   }
   .pathway-panel:last-child { margin-bottom: 0; }
+  .community-grid::after { height: clamp(20rem, 58svh, 31rem); }
 }
 
 @media (max-width: 520px) {
@@ -505,4 +511,78 @@ button:focus-visible, a:focus-visible { outline-color: var(--signal-gold-light);
   .pathway-panel:nth-child(4n),
   .pathway-panel:nth-child(5n),
   .pathway-panel:nth-child(9) { transform: none; }
+}
+
+/* Sculptural wayfinding accents: precise isometric forms rather than decorative blobs. */
+.mission-section,
+.pathways-section { position: relative; overflow: clip; }
+.mission-section > :not(.signal-sculpture),
+.pathways-heading,
+.community-grid { position: relative; z-index: 1; }
+.signal-sculpture {
+  --sculpture-light: var(--royal-blue);
+  --sculpture-mid: var(--royal-navy);
+  --sculpture-deep: var(--royal-navy-deep);
+  position: absolute;
+  z-index: 0;
+  width: clamp(8.5rem, 12vw, 12.5rem);
+  height: clamp(7.35rem, 10.35vw, 10.8rem);
+  pointer-events: none;
+  filter: drop-shadow(0 1.1rem 1.15rem rgba(4, 20, 44, 0.13));
+  transform-origin: center;
+}
+.signal-sculpture-gold {
+  --sculpture-light: #ead6a0;
+  --sculpture-mid: var(--signal-gold);
+  --sculpture-deep: #9d7634;
+}
+.signal-sculpture-red {
+  --sculpture-light: #c34c69;
+  --sculpture-mid: var(--royal-red);
+  --sculpture-deep: #57102a;
+}
+.sculpture-top,
+.sculpture-front,
+.sculpture-side { position: absolute; display: block; }
+.sculpture-top {
+  inset: 0 0 auto;
+  height: 43%;
+  background: var(--sculpture-light);
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+.sculpture-front {
+  top: 21.5%;
+  left: 0;
+  width: 50%;
+  height: 57%;
+  background: var(--sculpture-mid);
+  clip-path: polygon(0 0, 100% 33%, 100% 100%, 0 67%);
+}
+.sculpture-side {
+  top: 21.5%;
+  right: 0;
+  width: 50%;
+  height: 57%;
+  background: var(--sculpture-deep);
+  clip-path: polygon(0 33%, 100% 0, 100% 67%, 0 100%);
+}
+.mission-sculpture {
+  right: clamp(2.2rem, 7vw, 8rem);
+  bottom: clamp(1.5rem, 5vw, 4.25rem);
+  transform: rotate(-7deg);
+}
+.pathway-sculpture-left {
+  left: clamp(0.9rem, 3vw, 3.5rem);
+  top: clamp(14rem, 18vw, 18.5rem);
+  transform: rotate(8deg);
+}
+.pathway-sculpture-right {
+  right: clamp(0.9rem, 3vw, 3.5rem);
+  top: auto;
+  bottom: clamp(3rem, 8vw, 7rem);
+  transform: rotate(-11deg);
+}
+
+@media (max-width: 860px) {
+  .signal-sculpture { display: none; }
 }
