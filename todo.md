@@ -126,3 +126,6 @@
 - [x] Preserve guide names, panel imagery, and chat/voice behavior after removing the figures.
 - [x] Verify the figure-free pathway cards remain legible and visually balanced.
 - [x] Obtain an independent visual review of the figure-free pathway cards for readability and balance.
+- [x] Audit all implemented website, chat, voice, safety, accessibility, and deployment features for README documentation.
+- [x] Write a comprehensive README covering setup, architecture, feature behavior, validation, and project conventions.
+- [x] Review the README against the implementation and checkpoint the documentation update.
