@@ -182,3 +182,5 @@
 - [x] Audit all visible site controls, scrolling behavior, and interactive transitions across desktop and compact layouts.
 - [x] Audit reduced-motion behavior, core accessibility semantics, and browser/runtime errors; fix only verified defects.
 - [x] Document the completed full-site QA pass and publish any necessary corrections.
+- [x] Hide the native pointer on supported fine-pointer devices so the existing sphere is the sole visual cursor.
+- [x] Verify native-cursor hiding preserves touch, reduced-motion, and chat-dock cursor safeguards.
