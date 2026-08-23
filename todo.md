@@ -70,3 +70,8 @@
 - [x] Validate the corrected final-card handoff in forward and reverse scrolling directions.
 - [x] Add restrained royal-navy, gold, and red sculptural 3D-style accents to the light editorial spaces.
 - [x] Validate the new decorative objects across desktop, mobile, and reduced-motion modes.
+- [x] Reposition every sculptural accent into whitespace that does not overlap text or pathway panels.
+- [x] Add a subtle alternating counter-tilt to successive stacked pathway panels.
+- [x] Validate desktop/mobile text clearance, card stack order, and reduced-motion behavior after the refinement.
+- [x] Re-run desktop forward layering, reverse unwind, and final-card handoff checks after applying alternating tilts.
+- [x] Re-run compact sticky-stack order checks after applying alternating tilts.

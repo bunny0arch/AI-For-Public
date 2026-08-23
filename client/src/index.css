@@ -424,13 +424,15 @@ button:focus-visible, a:focus-visible { outline-color: var(--signal-gold-light);
   width: min(100%, 64rem);
   min-height: clamp(20rem, 48vh, 28rem);
   margin: 0 auto clamp(14rem, 31vh, 23rem);
-  transform: none;
+  --stack-tilt: -0.48deg;
+  transform: rotate(var(--stack-tilt));
   transform-origin: center top;
   z-index: calc(20 + var(--panel-index));
   box-shadow: 0 22px 48px rgba(4, 20, 44, 0.24);
 }
 
 .pathway-panel:last-child { margin-bottom: 0; }
+.pathway-panel:nth-child(even) { --stack-tilt: 0.48deg; }
 .community-grid::after {
   content: "";
   display: block;
@@ -438,7 +440,7 @@ button:focus-visible, a:focus-visible { outline-color: var(--signal-gold-light);
 }
 .pathway-panel:hover,
 .pathway-panel:focus-within {
-  transform: none;
+  transform: rotate(var(--stack-tilt));
   box-shadow: 0 26px 56px rgba(4, 20, 44, 0.34);
   filter: none;
 }
@@ -491,6 +493,16 @@ button:focus-visible, a:focus-visible { outline-color: var(--signal-gold-light);
     margin: 0 0 clamp(9rem, 22vh, 13rem);
     box-shadow: 0 16px 38px rgba(4, 20, 44, 0.23);
   }
+  .pathway-panel,
+  .panel-wide,
+  .panel-tall,
+  .panel-standard,
+  .panel-feature,
+  .pathway-panel:nth-child(3n),
+  .pathway-panel:nth-child(4n),
+  .pathway-panel:nth-child(5n),
+  .pathway-panel:nth-child(9) { --stack-tilt: -0.32deg; }
+  .pathway-panel:nth-child(even) { --stack-tilt: 0.32deg; }
   .pathway-panel:last-child { margin-bottom: 0; }
   .community-grid::after { height: clamp(20rem, 58svh, 31rem); }
 }
@@ -510,7 +522,7 @@ button:focus-visible, a:focus-visible { outline-color: var(--signal-gold-light);
   .pathway-panel:nth-child(3n),
   .pathway-panel:nth-child(4n),
   .pathway-panel:nth-child(5n),
-  .pathway-panel:nth-child(9) { transform: none; }
+  .pathway-panel:nth-child(9) { transform: none !important; }
 }
 
 /* Sculptural wayfinding accents: precise isometric forms rather than decorative blobs. */
@@ -567,19 +579,23 @@ button:focus-visible, a:focus-visible { outline-color: var(--signal-gold-light);
   clip-path: polygon(0 33%, 100% 0, 100% 67%, 0 100%);
 }
 .mission-sculpture {
-  right: clamp(2.2rem, 7vw, 8rem);
-  bottom: clamp(1.5rem, 5vw, 4.25rem);
+  right: clamp(-3.7rem, -2vw, -1.6rem);
+  top: clamp(1.5rem, 3vw, 3rem);
+  bottom: auto;
+  opacity: 0.82;
   transform: rotate(-7deg);
 }
 .pathway-sculpture-left {
-  left: clamp(0.9rem, 3vw, 3.5rem);
-  top: clamp(14rem, 18vw, 18.5rem);
+  left: clamp(-5.4rem, -3vw, -3.1rem);
+  top: clamp(34rem, 38vw, 42rem);
+  opacity: 0.78;
   transform: rotate(8deg);
 }
 .pathway-sculpture-right {
-  right: clamp(0.9rem, 3vw, 3.5rem);
+  right: clamp(-5.4rem, -3vw, -3.1rem);
   top: auto;
-  bottom: clamp(3rem, 8vw, 7rem);
+  bottom: clamp(3rem, 6vw, 5rem);
+  opacity: 0.78;
   transform: rotate(-11deg);
 }
 
