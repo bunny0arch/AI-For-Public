@@ -177,4 +177,4 @@
 - [x] Add a Back to previous guide action that restores the source guide without overlapping conversation docks.
 - [x] Verify the haptic guard, pin state, and back-guide handoff on the live Vercel deployment.
 - [x] Add a visible, accessible progress indicator for cross-guide handoffs that remains helpful during slow transitions.
-- [ ] Verify the handoff progress indicator on desktop and compact mobile layouts, then publish the update.
+- [x] Verify the handoff progress indicator on desktop and compact mobile layouts, then publish the update.
