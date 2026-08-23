@@ -33,3 +33,12 @@
 - [x] Tighten the colored signal particles into a compact orbit that follows the hover point closely.
 - [x] Make the orbit continuously revolve and visually fuse into a bright unified atomic point on click and pathway selection.
 - [x] Revalidate normal-motion and reduced-motion particle behavior after the atomic-orbit refinement.
+- [x] Add a download action to every one of the nine conversation docks that exports the active scoped conversation locally.
+- [x] Add an accessible subtle fusion-sound toggle and synchronize the generated sound with click and pathway-selection fusion.
+- [x] Rebuild the cursor field as a chaotic pseudo-3D particle system with distinct front, middle, and rear depth planes.
+- [x] Validate conversation export, sound preference behavior, normal motion, and reduced-motion suppression after the enhancement.
+- [x] Replace the static click flash with a staged, visible colored-orb convergence into the cursor before the fused glow appears.
+- [x] Correct the masthead sound-control layout so it remains visible and clickable without overlapping hero content.
+- [x] Correct the desktop hero vertical composition so its initiative line and headline retain clear separation from the masthead at shorter viewports.
+- [x] Remove the heavy chat-rendering dependency path that causes production builds to exceed the available memory budget, while preserving readable conversation output.
+- [x] Add a distinct middle-depth particle plane between the existing front and rear orbital layers, then revalidate normal and reduced motion behavior.
