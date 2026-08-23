@@ -6,6 +6,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { PATHWAY_IDS, ROUTING_MODEL, buildChatSystemPrompt, buildRouterSystemPrompt, detectDomainRoute } from "./chatConfig";
 import { generateScopedResponse } from "./chatProviders";
+import { synthesizeGuideSpeech } from "./guideSpeech";
 import { getCommunityPathway } from "../shared/communityPathways";
 
 const conversationMessage = z.object({
@@ -103,6 +104,20 @@ export const appRouter = router({
         const response = await generateScopedResponse(input.communityId, buildChatSystemPrompt(input.communityId, input.language), input.messages);
 
         return { kind: "answer" as const, content: response.content, provider: response.provider };
+      }),
+    speak: publicProcedure
+      .input(
+        z.object({
+          communityId: z.string().min(1).max(64),
+          language: z.enum(["English", "हिन्दी", "తెలుగు"]),
+          content: z.string().trim().min(1).max(1_500),
+        })
+      )
+      .mutation(async ({ input }) => {
+        if (!getCommunityPathway(input.communityId)) {
+          throw new Error("Choose a valid community pathway before using guide voice.");
+        }
+        return synthesizeGuideSpeech(input.content, input.language);
       }),
   }),
 });

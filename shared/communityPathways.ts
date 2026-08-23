@@ -9,6 +9,12 @@ export type CommunityPathway = {
   starterPrompts: string[];
   greeting: string;
   image?: string;
+  guide: {
+    name: string;
+    role: string;
+    voice: string;
+    portrait: string;
+  };
   size: "wide" | "tall" | "standard" | "feature";
 };
 
@@ -26,8 +32,14 @@ export const communityPathways: CommunityPathway[] = [
       "What details should I compare before choosing a crop this season?",
       "Help me list the documents needed for farm support in my state.",
     ],
-    greeting: "I’m here to help you work through the next farm decision. Tell me your crop, district, and what you are seeing—or ask in the language you use every day.",
+    greeting: "I’m Asha, your AI farm guide. I’ll help you work through a safer next farm decision without replacing local expertise. Tell me your crop, district, and what you are seeing—or ask in the language you use every day.",
     image: "/manus-storage/field-reference_86704408.jpg",
+    guide: {
+      name: "Asha",
+      role: "Farm guide",
+      voice: "calm, observant, farmer-first and practical",
+      portrait: "/manus-storage/guide-asha-farmer_bd6efab9.png",
+    },
     size: "wide",
   },
   {
@@ -43,8 +55,14 @@ export const communityPathways: CommunityPathway[] = [
       "Help me make a safety checklist for a small fishing boat.",
       "How can I record catch and price information for a better selling decision?",
     ],
-    greeting: "Let’s begin with safety and a clear plan. Tell me your coast, boat type, and what decision you need to make today.",
+    greeting: "I’m Vikram, your AI coast guide. Let’s begin with safety and a clear plan—tell me your coast, boat type, and what decision you need to make today.",
     image: "/manus-storage/fishing-harbor-replacement_9d45fa9a.jpg",
+    guide: {
+      name: "Vikram",
+      role: "Coast guide",
+      voice: "steady, safety-minded and concise",
+      portrait: "/manus-storage/guide-vikram-fisherman_867186d1.png",
+    },
     size: "tall",
   },
   {
@@ -60,8 +78,14 @@ export const communityPathways: CommunityPathway[] = [
       "What information should I collect before setting a fair price?",
       "Help me identify a small online market plan for my craft.",
     ],
-    greeting: "Your craft already has a story. Tell me what you make, who you hope to reach, and the business question you want to solve.",
+    greeting: "I’m Meera, your AI craft guide. Your work already has a story—tell me what you make, who you hope to reach, and the business question you want to solve.",
     image: "/manus-storage/artisan-loom-replacement_c00969f9.jpg",
+    guide: {
+      name: "Meera",
+      role: "Craft guide",
+      voice: "thoughtful, market-aware and respectful of craft",
+      portrait: "/manus-storage/guide-meera-artisan_ab7c70f4.png",
+    },
     size: "standard",
   },
   {
@@ -77,7 +101,14 @@ export const communityPathways: CommunityPathway[] = [
       "What simple daily numbers should I write down for my stall?",
       "How can I compare two small business support options?",
     ],
-    greeting: "Let’s make your next business decision clearer. What do you sell, and what are you deciding this week?",
+    greeting: "I’m Farah, your AI street-economy guide. Let’s make your next business decision clearer—what do you sell, and what are you deciding this week?",
+    image: "/manus-storage/panel-micro-entrepreneurs_623bd353.jpg",
+    guide: {
+      name: "Farah",
+      role: "Street economy guide",
+      voice: "practical, numbers-aware and encouraging",
+      portrait: "/manus-storage/guide-farah-vendor_f40dc36d.png",
+    },
     size: "standard",
   },
   {
@@ -93,7 +124,14 @@ export const communityPathways: CommunityPathway[] = [
       "Help me make a document checklist for a government service.",
       "Explain eligibility requirements in simple language.",
     ],
-    greeting: "I can help you break a public-service process into clear steps. Name the service and your state, and we’ll start with what is known.",
+    greeting: "I’m Nandini, your AI public-service guide. I can help break a process into clear steps—name the service and your state, and we’ll start with what is known.",
+    image: "/manus-storage/panel-public-services-v2_072c4645.jpg",
+    guide: {
+      name: "Nandini",
+      role: "Service guide",
+      voice: "patient, precise and plain-spoken",
+      portrait: "/manus-storage/guide-nandini-services_c87ae11a.png",
+    },
     size: "feature",
   },
   {
@@ -109,7 +147,14 @@ export const communityPathways: CommunityPathway[] = [
       "What information should I check before applying for accessible employment?",
       "Can you simplify this instruction into short, clear steps?",
     ],
-    greeting: "Tell me the task you want to make easier and any accessibility preference you would like me to respect. We can work one step at a time.",
+    greeting: "I’m Kiran, your AI access guide. Tell me the task you want to make easier and any accessibility preference you would like me to respect. We can work one step at a time.",
+    image: "/manus-storage/panel-disabilities-v2_1430f14c.jpg",
+    guide: {
+      name: "Kiran",
+      role: "Access guide",
+      voice: "direct, inclusive and autonomy-centered",
+      portrait: "/manus-storage/guide-kiran-access_9fa6f872.png",
+    },
     size: "standard",
   },
   {
@@ -125,7 +170,14 @@ export const communityPathways: CommunityPathway[] = [
       "Explain this science topic in simple Hindi and English.",
       "What skills can I learn with a phone and two hours a day?",
     ],
-    greeting: "I can help you learn in small, useful steps. What are you studying or hoping to learn next?",
+    greeting: "I’m Ravi, your AI learning guide. I can help you learn in small, useful steps—what are you studying or hoping to learn next?",
+    image: "/manus-storage/panel-education-v2_3edfb89b.jpg",
+    guide: {
+      name: "Ravi",
+      role: "Learning guide",
+      voice: "encouraging, clear and resource-aware",
+      portrait: "/manus-storage/guide-ravi-learning_9ff264aa.png",
+    },
     size: "standard",
   },
   {
@@ -141,7 +193,14 @@ export const communityPathways: CommunityPathway[] = [
       "What details should our community record after a drought warning?",
       "Explain this weather alert in plain language.",
     ],
-    greeting: "Preparedness starts with clear information. Tell me what risk you are preparing for and what resources your household has available.",
+    greeting: "I’m Leela, your AI climate-readiness guide. Preparedness starts with clear information—tell me what risk you are preparing for and what resources your household has available.",
+    image: "/manus-storage/panel-climate-v2_9ff79e61.jpg",
+    guide: {
+      name: "Leela",
+      role: "Resilience guide",
+      voice: "calm, organized and precautionary",
+      portrait: "/manus-storage/guide-leela-climate_c2190c92.png",
+    },
     size: "tall",
   },
   {
@@ -157,7 +216,14 @@ export const communityPathways: CommunityPathway[] = [
       "What questions should I ask people before building an AI tool for them?",
       "Help me define a small, measurable public-good outcome.",
     ],
-    greeting: "Tell me about the community you care about and the moment where information, access or confidence breaks down. We’ll shape a useful starting point.",
+    greeting: "I’m Saira, your AI community guide. Tell me about the community you care about and the moment where information, access or confidence breaks down. We’ll shape a useful starting point.",
+    image: "/manus-storage/panel-open-field-v2_d8f21b86.jpg",
+    guide: {
+      name: "Saira",
+      role: "Community guide",
+      voice: "curious, facilitative and grounded in lived needs",
+      portrait: "/manus-storage/guide-saira-community_f8a3d13f.png",
+    },
     size: "feature",
   },
 ];

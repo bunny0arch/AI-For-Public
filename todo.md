@@ -75,3 +75,36 @@
 - [x] Validate desktop/mobile text clearance, card stack order, and reduced-motion behavior after the refinement.
 - [x] Re-run desktop forward layering, reverse unwind, and final-card handoff checks after applying alternating tilts.
 - [x] Re-run compact sticky-stack order checks after applying alternating tilts.
+- [x] Add a brief pop-and-return response when the fine-pointer sphere is clicked.
+- [x] Hide the pointer sphere while the cursor is inside an active chat dock.
+- [x] Validate click response, chat clearance, and reduced-motion suppression.
+- [x] Create brighter, pathway-specific visual imagery for panels 04 through 09.
+- [x] Integrate the six new visuals without reducing stacked-panel text contrast or readability.
+- [x] Validate all pathway images across desktop and compact layouts.
+- [x] Slow the looping hero video so its motion remains secondary to the landing-page content.
+- [x] Validate the reduced hero playback rate alongside the existing loop and reduced-motion fallback.
+- [x] Confirm that all six generated pathway visuals resolve successfully rather than showing generation placeholders.
+- [x] Inspect panels 04–09 on desktop and compact layouts for brightness, subject visibility, and readable overlay copy.
+- [x] Revalidate end-to-start looping at the new 0.62× hero playback rate.
+- [x] Replace the failed generated background assets for panels 05–09 and visually confirm that no generation-failure placeholders remain.
+- [x] Confirm the pending Open Field background resolves to a people-centered image before the final visual review.
+- [x] Define a named, respectful community-guide identity for each of the nine pathways.
+- [x] Generate a consistent art figure for every pathway panel and integrate it without obscuring the panel’s primary copy.
+- [x] Update each scoped chat introduction and response prompt to speak through its named guide while preserving factual, safety, and scope constraints.
+- [x] Validate all nine panel figures, persona introductions, redirects, and mobile readability.
+- [x] Visually review panels 04–09 on desktop and mobile for brighter imagery, clear subjects, and readable overlay copy.
+- [x] Confirm the Open Field background visibly depicts a people-centered community composition.
+- [x] Exercise all nine pathway openings to verify guide labels, introductions, and cross-pathway redirects after persona changes.
+- [x] Capture a trusted visual review for panels 04–09 on desktop and compact layouts, confirming subject clarity and readable overlay copy.
+- [x] Capture explicit visual evidence that the rendered Open Field panel shows a people-centered community composition.
+- [x] Lift the late-pathway image exposure and reduce scrim density so panels 04–09 read more clearly on compact screens.
+- [x] Capture post-exposure desktop and compact visual evidence for readable panels 04–09 and their clearer subjects.
+- [x] Capture rendered Open Field panel evidence showing the people-centered community-mapping scene in context.
+- [ ] Obtain a fresh trusted desktop review for panels 04–09 after the final exposure adjustment.
+- [ ] Obtain a fresh trusted compact review for panels 04–09 and the Open Field composition after the final exposure adjustment.
+- [x] Verify ElevenLabs voice-service availability and select clear language-aware voice behavior.
+- [x] Add a secure server-side ElevenLabs speech endpoint that keeps the API key private.
+- [x] Add an accessible play/stop guide-voice control beside the guide title in each active chat.
+- [x] Validate voice playback for English, Hindi, and Telugu selections plus failure handling.
+- [x] Confirm a successful Hindi guide-voice response reaches active audio playback and the Stop state.
+- [x] Exercise a guide-voice failure path and confirm the retryable user-facing error message.

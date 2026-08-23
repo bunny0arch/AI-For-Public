@@ -14,8 +14,19 @@ describe("community chat configuration", () => {
     expect(CHAT_MODEL).toBe("claude-haiku-4-5");
     expect(ROUTING_MODEL).toBe("gpt-5-nano");
     expect(prompt).toContain("AI for Farmers");
+    expect(prompt).toContain("You are Asha");
+    expect(prompt).toContain("never imply that you are a real person");
     expect(prompt).toContain("must not invent real-time weather");
     expect(prompt).toContain("NEVER name a disease");
+  });
+
+  it("gives every pathway a named AI guide introduction and disclosed guide voice", () => {
+    for (const pathway of communityPathways) {
+      const prompt = buildChatSystemPrompt(pathway.id);
+      expect(pathway.greeting).toContain(`I’m ${pathway.guide.name}`);
+      expect(prompt).toContain(`You are ${pathway.guide.name}`);
+      expect(prompt).toContain("never imply that you are a real person");
+    }
   });
 
   it("rejects an unknown pathway", () => {

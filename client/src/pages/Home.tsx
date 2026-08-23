@@ -1,6 +1,7 @@
 import type { Message } from "@/components/AIChatBox";
 import { trpc } from "@/lib/trpc";
 import { communityPathways, type CommunityPathway } from "@shared/communityPathways";
+import { conversationLanguages, inferSpeechLanguage, type ConversationLanguage } from "@shared/speechLanguage";
 import {
   ArrowDownRight,
   ArrowRight,
@@ -9,7 +10,9 @@ import {
   Download,
   Languages,
   MoveDown,
+  Play,
   SendHorizonal,
+  Square,
   X,
 } from "lucide-react";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
@@ -17,12 +20,10 @@ import { toast } from "sonner";
 
 const markUrl = "/manus-storage/collective-mark_962f936b.png";
 const heroVideoUrl = "/manus-storage/glass-flower_89bde4e6.mp4";
-const languageOptions = ["English", "हिन्दी", "తెలుగు"] as const;
-type ConversationLanguage = (typeof languageOptions)[number];
 const AIChatBox = lazy(() => import("@/components/AIChatBox").then((module) => ({ default: module.AIChatBox })));
 
-function CursorSphere({ visible }: { visible: boolean }) {
-  return <span className={`cursor-sphere ${visible ? "is-visible" : ""}`} aria-hidden="true" />;
+function CursorSphere({ visible, popping }: { visible: boolean; popping: boolean }) {
+  return <span className={`cursor-sphere ${visible ? "is-visible" : ""} ${popping ? "is-popping" : ""}`} aria-hidden="true" />;
 }
 
 function SignalSculpture({ tone, className }: { tone: "navy" | "gold" | "red"; className: string }) {
@@ -39,16 +40,24 @@ function focusPathways() {
   document.getElementById("pathways")?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+function isInsideConversation(target: EventTarget | null) {
+  return target instanceof Element && Boolean(target.closest(".conversation-dock"));
+}
+
 export default function Home() {
   const [selectedPathway, setSelectedPathway] = useState<CommunityPathway | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [language, setLanguage] = useState<ConversationLanguage>("English");
   const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
   const [cursorVisible, setCursorVisible] = useState(false);
+  const [cursorPopping, setCursorPopping] = useState(false);
+  const [isGuideSpeaking, setIsGuideSpeaking] = useState(false);
   const [isConversationClosing, setIsConversationClosing] = useState(false);
   const siteRef = useRef<HTMLElement>(null);
   const dialogRef = useRef<HTMLElement>(null);
   const closeTimerRef = useRef<number | null>(null);
+  const popTimerRef = useRef<number | null>(null);
+  const guideAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const chatMutation = trpc.chat.respond.useMutation({
     onSuccess: (result) => {
@@ -76,6 +85,27 @@ export default function Home() {
     },
   });
 
+  const speakMutation = trpc.chat.speak.useMutation({
+    onSuccess: ({ audioBase64, contentType }) => {
+      const audio = guideAudioRef.current;
+      if (!audio) return;
+      audio.onplay = () => setIsGuideSpeaking(true);
+      audio.onpause = () => setIsGuideSpeaking(false);
+      audio.onended = () => setIsGuideSpeaking(false);
+      audio.onerror = () => {
+        setIsGuideSpeaking(false);
+        toast.error("Guide voice could not finish playing. Please try again.");
+      };
+      audio.pause();
+      audio.src = `data:${contentType};base64,${audioBase64}`;
+      audio.currentTime = 0;
+      void audio.play()
+        .then(() => window.setTimeout(() => setIsGuideSpeaking(!audio.paused), 100))
+        .catch(() => toast.error("Your browser blocked guide voice playback. Try the control again."));
+    },
+    onError: () => toast.error("Guide voice is unavailable right now. Please try again."),
+  });
+
   const dialogLabel = useMemo(
     () => (selectedPathway ? `${selectedPathway.title} conversation` : "Community conversation"),
     [selectedPathway]
@@ -90,6 +120,8 @@ export default function Home() {
 
   useEffect(() => () => {
     if (closeTimerRef.current) window.clearTimeout(closeTimerRef.current);
+    if (popTimerRef.current) window.clearTimeout(popTimerRef.current);
+    guideAudioRef.current?.pause();
   }, []);
 
   useEffect(() => {
@@ -98,6 +130,7 @@ export default function Home() {
     if (!finePointer.matches || reducedMotion.matches) return;
 
     let frame = 0;
+    let popFrame = 0;
     let pointerX = 0;
     let pointerY = 0;
     const updatePointer = () => {
@@ -106,19 +139,44 @@ export default function Home() {
       frame = 0;
     };
     const onMove = (event: PointerEvent) => {
+      if (isInsideConversation(event.target)) {
+        setCursorVisible(false);
+        setCursorPopping(false);
+        if (popTimerRef.current) window.clearTimeout(popTimerRef.current);
+        return;
+      }
       pointerX = event.clientX;
       pointerY = event.clientY;
       setCursorVisible(true);
       if (!frame) frame = window.requestAnimationFrame(updatePointer);
     };
+    const onPointerDown = (event: PointerEvent) => {
+      if (isInsideConversation(event.target)) {
+        setCursorVisible(false);
+        setCursorPopping(false);
+        if (popTimerRef.current) window.clearTimeout(popTimerRef.current);
+        return;
+      }
+      setCursorPopping(false);
+      if (popFrame) window.cancelAnimationFrame(popFrame);
+      if (popTimerRef.current) window.clearTimeout(popTimerRef.current);
+      popFrame = window.requestAnimationFrame(() => {
+        setCursorPopping(true);
+        popFrame = 0;
+      });
+      popTimerRef.current = window.setTimeout(() => setCursorPopping(false), 230);
+    };
     const onLeave = () => setCursorVisible(false);
 
     window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("pointerdown", onPointerDown, { passive: true });
     document.documentElement.addEventListener("mouseleave", onLeave);
     return () => {
       window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerdown", onPointerDown);
       document.documentElement.removeEventListener("mouseleave", onLeave);
       if (frame) window.cancelAnimationFrame(frame);
+      if (popFrame) window.cancelAnimationFrame(popFrame);
     };
   }, []);
 
@@ -133,6 +191,8 @@ export default function Home() {
 
   function closePathway() {
     if (!chatMutation.isPending) {
+      guideAudioRef.current?.pause();
+      setIsGuideSpeaking(false);
       setIsConversationClosing(true);
       closeTimerRef.current = window.setTimeout(() => {
         setSelectedPathway(null);
@@ -157,9 +217,32 @@ export default function Home() {
   }
 
   function selectLanguage(nextLanguage: ConversationLanguage) {
+    guideAudioRef.current?.pause();
+    setIsGuideSpeaking(false);
     setLanguage(nextLanguage);
     setLanguageMenuOpen(false);
     toast.success(`Conversation language set to ${nextLanguage}.`);
+  }
+
+  function toggleGuideVoice() {
+    if (!selectedPathway) return;
+    if (isGuideSpeaking) {
+      guideAudioRef.current?.pause();
+      setIsGuideSpeaking(false);
+      return;
+    }
+    if (speakMutation.isPending) return;
+
+    const latestGuideMessage = [...messages].reverse().find((message) => message.role === "assistant");
+    if (!latestGuideMessage) {
+      toast.message("Ask a question first, then I can read the guide’s response aloud.");
+      return;
+    }
+    speakMutation.mutate({
+      communityId: selectedPathway.id,
+      language: inferSpeechLanguage(latestGuideMessage.content, language),
+      content: latestGuideMessage.content,
+    });
   }
 
   function downloadConversation() {
@@ -188,7 +271,7 @@ export default function Home() {
 
   return (
     <main className={`site-shell ${selectedPathway && !isConversationClosing ? "is-conversation-active" : ""}`} ref={siteRef}>
-      <CursorSphere visible={cursorVisible} />
+      <CursorSphere visible={cursorVisible} popping={cursorPopping} />
       <section className="hero-shell" aria-labelledby="hero-title">
         <video
           className="hero-video"
@@ -197,6 +280,10 @@ export default function Home() {
           loop
           playsInline
           preload="metadata"
+          onLoadedMetadata={(event) => {
+            event.currentTarget.defaultPlaybackRate = 0.62;
+            event.currentTarget.playbackRate = 0.62;
+          }}
           poster="/manus-storage/field-reference_86704408.jpg"
           aria-hidden="true"
         >
@@ -315,10 +402,14 @@ export default function Home() {
                 <img src={pathway.image} alt="" loading="lazy" className="panel-image" />
               )}
               <div className="panel-scrim" aria-hidden="true" />
+              <img src={pathway.guide.portrait} alt="" loading="lazy" className="panel-guide-portrait" aria-hidden="true" />
               <button type="button" className="panel-button" onClick={() => openPathway(pathway)} aria-label={`Open ${pathway.title} conversation`}>
                 <div className="panel-topline">
                   <span className="panel-number">{pathway.number}</span>
-                  <span className="panel-eyebrow">{pathway.eyebrow}</span>
+                  <span className="panel-guide-meta">
+                    <span className="panel-eyebrow">{pathway.eyebrow}</span>
+                    <span className="panel-guide-name">Guide: {pathway.guide.name}</span>
+                  </span>
                   <ArrowRight className="panel-arrow" size={18} strokeWidth={1.5} />
                 </div>
                 <div className="panel-body">
@@ -368,8 +459,20 @@ export default function Home() {
           <section className="conversation-dock" ref={dialogRef} role="dialog" aria-modal="true" aria-label={dialogLabel} tabIndex={-1}>
             <div className="dock-header">
               <div>
-                <span className="dock-eyebrow">{selectedPathway.number} / {selectedPathway.eyebrow}</span>
-                <h2>{selectedPathway.title}</h2>
+                <span className="dock-eyebrow">{selectedPathway.number} / {selectedPathway.guide.name} · {selectedPathway.guide.role}</span>
+                <div className="dock-title-row">
+                  <h2>{selectedPathway.title}</h2>
+                  <button
+                    className="dock-voice"
+                    type="button"
+                    onClick={toggleGuideVoice}
+                    disabled={speakMutation.isPending}
+                    aria-label={isGuideSpeaking ? `Stop ${selectedPathway.guide.name} speaking` : `Listen to ${selectedPathway.guide.name} speak`}
+                  >
+                    {isGuideSpeaking ? <Square size={13} fill="currentColor" /> : <Play size={15} fill="currentColor" />}
+                    <span>{speakMutation.isPending ? "Preparing" : isGuideSpeaking ? "Stop" : "Listen"}</span>
+                  </button>
+                </div>
               </div>
               <div className="dock-actions">
                 <div className="language-switcher dock-language-switcher">
@@ -385,7 +488,7 @@ export default function Home() {
                     <span>{language}</span>
                   </button>
                   <div className={`language-menu dock-language-menu ${languageMenuOpen ? "is-open" : ""}`} id="chat-language-menu" role="menu" aria-label="Choose conversation language">
-                    {languageOptions.map((option) => (
+                    {conversationLanguages.map((option) => (
                       <button key={option} type="button" role="menuitem" onClick={() => selectLanguage(option)} className={language === option ? "is-selected" : ""}>
                         {option}
                       </button>
@@ -401,6 +504,7 @@ export default function Home() {
                 </button>
               </div>
             </div>
+            <audio ref={guideAudioRef} preload="auto" aria-hidden="true" />
             <div className="dock-note">
               <CircleHelp size={16} strokeWidth={1.5} />
               <span>For grounded, local decisions. Verify time-sensitive or urgent guidance with trusted sources.</span>
