@@ -316,3 +316,88 @@ button:focus-visible, a:focus-visible { outline: 2px solid #c4f25a; outline-offs
   .cursor-sphere { display: none; }
   .pathway-panel, .pathway-panel:hover, .pathway-panel:focus-within { transform: none; }
 }
+
+/* Royal Civic palette: navy holds the field, gold marks information, and red is reserved for decisive interaction. */
+:root {
+  --background: oklch(0.16 0.045 257);
+  --foreground: oklch(0.95 0.012 90);
+  --card: oklch(0.2 0.05 257);
+  --card-foreground: oklch(0.95 0.012 90);
+  --popover: oklch(0.2 0.05 257);
+  --popover-foreground: oklch(0.95 0.012 90);
+  --primary: oklch(0.4 0.11 257);
+  --primary-foreground: oklch(0.98 0.008 90);
+  --secondary: oklch(0.26 0.055 257);
+  --secondary-foreground: oklch(0.94 0.012 90);
+  --muted: oklch(0.23 0.045 257);
+  --muted-foreground: oklch(0.72 0.025 257);
+  --accent: oklch(0.74 0.085 83);
+  --accent-foreground: oklch(0.17 0.045 257);
+  --destructive: oklch(0.48 0.16 20);
+  --border: oklch(0.85 0.02 90 / 0.17);
+  --input: oklch(0.85 0.02 90 / 0.17);
+  --ring: oklch(0.74 0.085 83);
+  --royal-navy-deep: #06162f;
+  --royal-navy: #0a2853;
+  --royal-blue: #164b8c;
+  --royal-red: #841f3e;
+  --royal-red-bright: #a92c50;
+  --signal-gold: #cfb06a;
+  --signal-gold-light: #e0c98e;
+  --paper: #f4f1e8;
+  --ink: #0a2244;
+}
+
+html, body { background: var(--royal-navy-deep); color: var(--paper); }
+button:focus-visible, a:focus-visible { outline-color: var(--signal-gold-light); }
+.site-shell { background: var(--paper); }
+.hero-shell { background: var(--royal-navy-deep); color: var(--paper); }
+.hero-veil { background: rgba(3, 16, 37, 0.64); }
+.hero-shell::before { background: rgba(3, 13, 30, 0.22); }
+.masthead-nav a:hover, .masthead-nav button:hover, .language-control:hover, .sound-control:hover, .sound-control.is-on { color: var(--signal-gold-light); }
+.language-menu { background: rgba(5, 21, 45, 0.97); border-color: rgba(244, 241, 232, 0.22); }
+.language-menu button:hover, .language-menu button.is-selected { color: var(--royal-navy-deep); background: var(--signal-gold); }
+.eyebrow, .hero-title em, .pathways-heading h2 em, .principle-copy h2 em { color: var(--signal-gold-light); }
+.hero-action { color: var(--paper); background: var(--royal-blue); border: 1px solid rgba(207, 176, 106, 0.68); }
+.hero-action:hover { background: #205b9f; border-color: var(--signal-gold-light); }
+.hero-index-heading span:first-child, .hero-index-number, .dial-label { color: var(--signal-gold-light); }
+.hero-index-item:hover { color: var(--paper); background: var(--royal-red); }
+.hero-index-item:hover .hero-index-number { color: var(--signal-gold-light); }
+.signal-dial { color: var(--paper); background: rgba(5, 21, 45, 0.58); border-color: rgba(244, 241, 232, 0.55); }
+.signal-dial:hover { background: rgba(10, 40, 83, 0.82); }
+.dial-ring { border-color: rgba(207, 176, 106, 0.78); }
+.footnote-dot { background: var(--royal-red-bright); }
+
+.mission-section { background: #efede5; color: var(--ink); }
+.section-marker, .mission-copy .section-kicker, .mission-aside { color: #48617f; }
+.mission-aside svg { color: var(--royal-red); }
+.pathways-section { background: var(--paper); color: var(--ink); }
+.pathways-heading p { color: #48617f; }
+.pathway-panel, .panel-feature { background: var(--royal-navy-deep); color: var(--paper); box-shadow: -18px 24px 45px rgba(4, 20, 44, 0.22); }
+.pathway-panel:hover, .pathway-panel:focus-within { box-shadow: -22px 34px 60px rgba(4, 20, 44, 0.31); }
+.panel-scrim { background: rgba(4, 18, 40, 0.38); }
+.panel-button::before { background: var(--signal-gold); }
+.panel-button:hover { border-color: var(--signal-gold); background: rgba(132, 31, 62, 0.22); }
+.panel-number, .panel-purpose { color: var(--signal-gold-light); }
+.principle-section, .site-footer { background: var(--royal-navy-deep); color: var(--paper); }
+.text-link, .site-footer button { color: var(--signal-gold-light); }
+.text-link { border-bottom-color: rgba(207, 176, 106, 0.62); }
+
+.conversation-dock { background: var(--royal-navy-deep); color: var(--paper); }
+.dock-eyebrow, .dock-note svg { color: var(--signal-gold-light); }
+.dock-close:hover { color: var(--paper); background: var(--royal-red); }
+.dock-download { color: var(--signal-gold-light); border-color: rgba(207, 176, 106, 0.56); }
+.dock-download:hover { color: var(--royal-navy-deep); background: var(--signal-gold); }
+.signal-chatbox, .chat-loading { background: #0a2853 !important; }
+.signal-chatbox [data-radix-scroll-area-viewport] { scrollbar-color: rgba(207, 176, 106, 0.62) transparent; }
+.signal-chatbox button[type="submit"], .signal-chatbox .bg-primary { color: var(--paper); background: var(--royal-red); }
+.signal-chatbox .bg-primary\/10 { background: rgba(207, 176, 106, 0.16); }
+.signal-chatbox .text-primary, .signal-chatbox .prose :where(code):not(:where([class~="not-prose"] *)) { color: var(--signal-gold-light); }
+
+@media (max-width: 860px) {
+  .hero-index-item { background: rgba(5, 21, 45, 0.62); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-shell { background: var(--royal-navy-deep) url("/manus-storage/field-reference_86704408.jpg") center/cover no-repeat; }
+}

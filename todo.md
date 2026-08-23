@@ -54,3 +54,9 @@
 - [x] Validate the reversible open/close transition on desktop and mobile layouts.
 - [x] Exercise all nine hero Signal Index buttons on desktop and verify each opens the matching scoped conversation.
 - [x] Exercise the mobile hero Signal Index rail across all nine pathways, including horizontal access and correct conversation opening for each item.
+- [x] Replace the hero background with the user-supplied glass-flower video.
+- [x] Verify the new hero video, poster fallback, and reduced-motion presentation across desktop and mobile.
+- [x] Run a compact-viewport runtime check for the glass-flower source, poster, and reduced-motion still fallback.
+- [x] Replace chartreuse accents with a refined royal-navy, royal-red, and gold color system.
+- [x] Rebalance hero, Signal Index, pathway, and chat colors for professional contrast and restraint.
+- [x] Validate the revised color system across desktop and mobile viewports.

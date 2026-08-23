@@ -16,7 +16,7 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState, type CSSPropertie
 import { toast } from "sonner";
 
 const markUrl = "/manus-storage/collective-mark_962f936b.png";
-const heroVideoUrl = "/manus-storage/purple-desert_18154f41.mp4";
+const heroVideoUrl = "/manus-storage/glass-flower_89bde4e6.mp4";
 const languageOptions = ["English", "हिन्दी", "తెలుగు"] as const;
 type ConversationLanguage = (typeof languageOptions)[number];
 const AIChatBox = lazy(() => import("@/components/AIChatBox").then((module) => ({ default: module.AIChatBox })));
